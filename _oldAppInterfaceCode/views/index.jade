@@ -1,0 +1,88 @@
+extends layout
+
+block content
+  h1="Embroidered Data v0.2.3.1"
+  div.data-style-container 
+    div.form-container
+     form.data-input
+      div#country-origin.form-element
+       p Where are you from ?
+       select#country-origin-select
+      div#country-current.form-element
+       p Where do you live ?
+       select#country-current-select
+      div#education.form-element
+       p What's your highest academic degree ?
+       select
+        option(value='1') Middle School
+        option(value='2') High-school
+        option(value='3') Bachellor
+        option(value='4') Masters Degree
+        option(value='5') Doctorate
+        option(value='6') Post-Doc
+        option(value='7') Interface Cultures (SPECIAL)
+      div#work-input.form-element
+       p What field do you work in ?
+       select
+        option(value='1') Architecture
+        option(value='2') Art and Culture
+        option(value='3') Business
+        option(value='4') Craft
+        option(value='5') Design
+        option(value='6') Economy
+        option(value='7') Education
+        option(value='8') Engineering
+        option(value='9') Finance
+        option(value='10') Government
+        option(value='11') Law
+        option(value='12') Media
+        option(value='13') Medicine
+        option(value='14') PR & Communication
+        option(value='15') Science
+      div#relationship.form-element
+       p What's your relationship status ?
+       div.status-wrapper
+        input#1rel(type='radio',name='relationship',value='1')
+        label(for='1rel') In a relationship.
+       div.status-wrapper
+        input#0rel(type='radio',name='relationship',value='0')
+        label(for='0rel') Not in a relationship.
+       div.status-wrapper
+        input#2rel(type='radio',name='relationship',value='2',checked='checked')
+        label(for='2rel') Unknown.
+      div#age.form-element
+       p How old are you now ?
+       input#age-input(type='number' name='age' min='1' max='120' value='25')
+    div.style-container
+       div#medium-input.form-element-style
+       div.form-element
+         p Production Method
+         select.medium 
+          option(value='2') Knit / Cross-stich
+          option(value='1') Print
+       div.form-element
+         p Stitch / Knit Density
+         select.cells
+          option(value='9') 9 Cells Wide
+          option(value='7') 7 Cells Wide
+          option(value='5')(selected='selected') 5 Cells Wide
+          option(value='3') 3 Cells Wide
+       div.form-element
+         p Choose a color 
+         input#color.jscolor(value="ef3e3e")
+       div#grid-container.form-element
+        input#grid(type="checkbox", name="Helper grid", checked=(true===false ? "checked" : undefined))
+        label(for='grid') Show stitching grid.
+    div.form-element#emailcontainer
+      p Your email here:
+      p#invalid Please enter a valid email.
+      input#email(type='email', name='email')
+    div#terms.form-element 
+        input#conf(type="checkbox", name="terms", checked=(true===false ? "checked" : undefined)).terms-check 
+        label(for='conf') I hereby confirm that I have read and agree to the #[a(href="./terms" , target='_self') Terms and Conditions].      
+    div.buttons
+      div.generator.button Email Pattern
+      div.pdf.button Print Pattern
+   
+
+    

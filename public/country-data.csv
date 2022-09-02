@@ -1,0 +1,94 @@
+country,population,perc_continent_pop,minority_percent,minorities,cultural_group,gdp
+Åland Islands (Finland),29000,0.00,6.6,5,northern,271175
+Albania,2887000,0.34,5,6,southeastern,12724
+Andorra,78000,0.01,51,4,southern,4800
+Antigua and Barbuda,91800,0.02,9,4,creole,2060
+Argentina,43132000,6.98,4.18704674,14,iberoamerican,953029
+Armenia,3010000,0.35,2,2,caucasus,10431
+Austria,8608000,1.01,8.9,7,central,437123
+Azerbaijan,9651000,1.13,8.4,5,caucasus,73537
+Belarus,9487000,1.11,19.8,4,eastern,71710
+Belgium,11264000,1.32,42,2,western,534672
+Bolivia,10520000,1.70,65.74840304,14,indoamerican,74836
+Bosnia and Herzegovina,3750000,0.44,52,3,southeastern,17828
+Brazil,204519000,33.07,33.1,12,mestizo,3259000
+Bulgaria,7185000,0.84,16,5,southeastern,53046
+Canada,33476688,9.47,27.2,11,western,1552386
+Chile,18006000,2.91,9.6,14,mestizo,431802
+Colombia,48218000,11.07,14,13,iberoamerican,682977
+Costa Rica,4851000,0.78,9.03,14,mestizo,75138
+Croatia,4230000,0.50,10,6,central,57371
+Cuba,11252000,1.82,26,10,iberoamerican,121000
+Cyprus,876000,0.10,50,2,southeastern,21919
+Czech Republic,10535000,1.24,9.6,4,central,205658
+Denmark,5673000,0.67,10,6,northern,340806
+Dominican Republic,9980000,1.61,37,14,mestizo,144052
+Ecuador,16279000,2.63,29,7,southern,192728
+El Salvador,6460000,1.04,13.33,14,creole,52776
+Estonia,1315000,0.15,32,5,baltic,24888
+Faroe Islands (Denmark),49000,0.01,10,0,northern,205658
+Finland,5476000,0.64,6.6,5,northern,271165
+France,64319000,7.54,16,4,western,2846889
+French Guiana,262000,0.04,43.5,10,western,5814
+Georgia,4506000,0.53,16,4,caucasus,16162
+Germany,81340000,9.54,19,7,central,3859547
+Gibraltar (UK),34000,0.00,15,7,western,1106
+Greece,10769000,1.26,7,8,southeastern,238023
+Guadeloupe (France),405000,0.07,25,4,western,9740
+Guatemala,16176000,2.62,48.5,15,indoamerican,125318
+Guernsey (UK),64000,0.01,15,2,western,2742
+Haiti,10994000,1.78,10,6,creole,19576
+Honduras,8950000,1.45,8,7,creole,40895
+Hungary,9835000,1.15,7.7,2,central,132260
+Iceland,331000,0.04,6,3,northern,14656
+Ireland,4630000,0.54,12.6,4,western,246438
+Isle of Man (UK),89000,0.01,15,2,western,4076
+Italy,60963000,7.15,8.3,5,southern,2147952
+Jersey (UK),103000,0.01,15,7,western,5100
+Kazakhstan,17543000,2.06,36.9,7,eastern,212260
+Kosovo,1867000,0.22,8,8,southeastern,6827
+Latvia,1980000,0.23,37.9,6,baltic,30953
+Liechtenstein,37000,0.00,34.4,4,central,5113
+Lithuania,2909000,0.34,16.5,4,baltic,46507
+Luxembourg,570000,0.07,43,7,central,60402
+Macedonia,2072000,0.24,36,5,southeastern,10238
+Malta,425000,0.05,4.7,2,southern,9545
+Martinique (France),383000,0.06,10,8,western,9610
+Mexico,121006000,19.57,20,9,mestizo,2224000
+Moldova,4083000,0.48,24,5,southeastern,7935
+Monaco,37000,0.00,53,3,western,5748
+Montenegro,620000,0.07,55.02,7,southeastern,4377
+Netherlands,16933000,1.99,19.3,8,western,866354
+Nicaragua,6514000,1.05,17,7,mestizo,31618
+Norway,5194000,0.61,15,3,northern,500244
+Panama,3764000,0.61,22,7,mestizo,83421
+Paraguay,7003000,1.13,8,12,mestizo,61587
+Peru,31153000,5.04,30,12,indoamerican,550226
+Poland,38494000,4.51,3,4,central,546644
+Portugal,10311000,1.21,5,2,southern,230012
+Puerto Rico,3508000,0.57,10,2,western,101500
+Romania,19822000,2.32,10.5,5,southeastern,199950
+Russia,144031000,16.88,20,6,eastern,1857461
+Saint Barthélemy (France),10000,0.00,6,3,western,255
+Saint Kitts and Nevis,53000,0.01,16.6,3,western,1227
+Saint Lucia,183600,0.03,5,2,southern,2109
+Saint Martin (France),36000,0.01,49,2,western,73056
+Saint Vincent and the Grenadines,109903,0.02,13,3,southern,1252
+San Marino,33000,0.00,0,1,southern,1802
+Serbia,7103000,0.83,17,4,southeastern,42492
+Slovakia,5426000,0.64,14,3,central,95805
+Slovenia,2065000,0.24,16.9,4,central,48005
+Spain,46335000,5.43,11,8,southern,1406855
+Suriname,573311,0.09,47,12,creole,9766
+Svalbard and Jan Mayen(Norway),3000,0.00,44.7,3,northern,500244
+Sweden,9795000,1.15,12,7,northern,570137
+Switzerland,8265000,0.97,21,4,central,712050
+The Bahamas,9394,0.00,5,4,creole,9394
+Trinidad and Tobago,43914,0.01,80,5,creole,43914
+Turkey,78214000,9.17,25,3,caucasus,806108
+Ukraine,42858000,5.02,22.2,10,eastern,178313
+United Kingdom,64915000,7.61,15,5,western,2945146
+United States of America,318860000,90.24,79,4,western,17947000
+Uruguay,3310000,0.54,80,7,southern,73056
+Vatican City,800,0.00,0,0,southern,0
+Venezuela,30620000,4.95,10,11,iberoamerican,403322
