@@ -32,7 +32,7 @@ class Questions extends Component {
               <p className=' w-2/3'>This is the living and location section of the pattern. A section is made up of motifs and symmetries.
                 Motifs are generated using answers to questions in the section, such as this one. Watch the pattern on the right to see how your answers change the design.</p>
             </section>
-            <section className=' w-fit grow-1'>
+            <section className='w-48 grow-1'>
               <h2 className=' min-w-fit text-4xl'>{this.props.currentQuestion + 1} / {questions.length} </h2>
             </section>
 

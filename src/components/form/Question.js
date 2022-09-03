@@ -55,7 +55,7 @@ class Question extends Component {
                 onChange={this.valueChanged} checked={this.state.selectedOption === q.choice_value}
                 value={q.choice_value}
                 id={`radio-${this.props.index}-${qindex}`}
-                className='w-8 h-8'
+                className='appearance-none rounded-full h-8 w-8 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer'
               ></input>
               <label
                 htmlFor={`radio-${this.props.index}-${qindex}`}
@@ -118,7 +118,7 @@ class Question extends Component {
 
           input = (
 
-            <select onChange={(e) => this.props.countryChange(e, this.props.index)} name="country" id="">
+            <select class='text-4xl text-blue-700 bg-transparent' onChange={(e) => this.props.countryChange(e, this.props.index)} name="country" id="">
                 {thecountries}
             </select>
           )
@@ -132,7 +132,7 @@ class Question extends Component {
     //   input = (<input type='number' value="0"></input>);
     // }
     return (
-      <li key={this.props.index} className='border rounded-xl w-full p-8 flex-col gap-y-6 drop-shadow-sm'>
+      <li key={this.props.index} className='border rounded-xl w-full p-16 flex-col gap-y-6 drop-shadow-sm h-96'>
          <div className="question_body w-full text-left text-2xl font-bold">
                   <p className="mb-8">{this.props.acf.question_body}</p>
                   </div>

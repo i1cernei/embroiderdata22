@@ -667,14 +667,14 @@ class PaperCanvas extends Component {
       Paper.project.activeLayer.removeChildren();
       // this.drawOriginCountryData(new Paper.Point(0, 200));
       for (let i = 0; i < 3; i++) {
-        this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.residenceMax * this.radius* i , 400));
+        this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.residenceMax * this.radius* i , this.radius * this.originMax * 2));
         // this.drawOriginCountryData(new Paper.Point(i * 2 * this.originMax * this.radius, 200));
-        this.drawResidenceCountryData(new Paper.Point(i * this.originMax * this.radius + this.residenceMax * this.radius * i , 400 + this.originMax * this.radius / 2));
+        this.drawResidenceCountryData(new Paper.Point(i * this.originMax * this.radius + this.residenceMax * this.radius * i , this.radius * this.originMax * 2 + this.originMax * this.radius / 2));
       }
 
       for (let i = 0; i < 3; i++) {
-        this.drawHomeData(new Paper.Point( 100 +i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i * this.props.questionvalues[7] * this.radius, 400 - this.originMax * this.radius +  this.radius ));
-        this.drawHomeData(new Paper.Point(100+ i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i *  this.props.questionvalues[7] * this.radius , 400 + this.originMax * this.radius * 1.5 + 4 * this.radius ));
+        this.drawHomeData(new Paper.Point( 100 +i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i * this.props.questionvalues[7] * this.radius, this.radius * this.originMax * 2 - this.originMax * this.radius +  this.radius ));
+        this.drawHomeData(new Paper.Point(100+ i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i *  this.props.questionvalues[7] * this.radius , this.radius * this.originMax * 2 + this.originMax * this.radius * 1.5 + 4 * this.radius ));
       }
     }
 
@@ -686,9 +686,9 @@ class PaperCanvas extends Component {
       if (Paper !== undefined) {
         // this.drawOriginCountryData(new Paper.Point(0, 200));
         for (let i = 0; i < 3; i++) {
-          this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , 400));
+          this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax * 2));
           if (this.props.residence !== '') {
-            this.drawResidenceCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius * i , 400 + this.originMax * this.radius / 2));
+            this.drawResidenceCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius * i ,  this.radius * this.originMax * 2 + this.originMax * this.radius / 2));
           }
           // this.drawHomeData(new Paper.Point(i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i , 2 * this.originMax * this.radius + 2 * this.radius ));
           // this.drawResidenceCountryData(new Paper.Point(i * 2 * this.originMax * this.radius, 200));
@@ -697,8 +697,8 @@ class PaperCanvas extends Component {
         }
 
         for (let i = 0; i < 3; i++) {
-          this.drawHomeData(new Paper.Point( 100 +i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i * (this.props.questionvalues[7] + 4)* this.radius, 400 - this.originMax * this.radius +  this.radius ));
-          this.drawHomeData(new Paper.Point(100+ i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i *  (this.props.questionvalues[7] + 4) * this.radius , 400 + this.originMax * this.radius * 1.5 + 4 * this.radius ));
+          this.drawHomeData(new Paper.Point( 100 +i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i * (this.props.questionvalues[7] + 4)* this.radius, this.radius * this.originMax * 2 - this.originMax * this.radius +  this.radius ));
+          this.drawHomeData(new Paper.Point(100+ i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i *  (this.props.questionvalues[7] + 4) * this.radius , this.radius * this.originMax * 2 + this.originMax * this.radius * 1.5 + 4 * this.radius ));
         }
       }
     }
