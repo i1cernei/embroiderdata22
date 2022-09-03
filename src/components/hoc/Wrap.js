@@ -16,6 +16,7 @@ class Wrap extends Component {
       origin: '',
       residence: '',
       cultures: '',
+      sections: '',
     };
 
     this.questionChange = (event, index) => {
@@ -84,7 +85,30 @@ class Wrap extends Component {
 componentDidMount() {
     // let result = {};
       let localData = '';
-      const values = [];
+  const values = [];
+
+  const sectionIDs = [2, 4, 3];
+  const sections = [];
+
+  sectionIDs.map((id, index) => {
+    const values = [];
+
+    fetch(`https://dev.blackandfield.com/embroider/wp-json/wp/v2/question/?per_page=100&categories=${id}&order=asc`).then(response => response.json())
+        .then(data => {
+
+          for (let question in data) {
+            values.push(0);
+          }
+          sections[index] = { data, questionValues: values }
+
+        });
+
+      // const $this = this;
+
+
+  })
+
+
 
       fetch('https://dev.blackandfield.com/embroider/wp-json/wp/v2/question/?per_page=100&categories=2&order=asc').then(response => response.json())
         .then(data => {
@@ -92,7 +116,7 @@ componentDidMount() {
           for (let question in data) {
             values.push(0);
           }
-          this.setState({ data, questionValues: values })
+          this.setState({ data, questionValues: values, sections })
         });
 
       const $this = this;
