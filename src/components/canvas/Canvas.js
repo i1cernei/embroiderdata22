@@ -11,9 +11,10 @@ const Canvas = props => {
   const canvasRef = useRef(null)
 
   useEffect(() => {
+
     const canvas = canvasRef.current;
     Paper.setup(canvas);
-
+    console.log(props.questionvalues)
     /**
      * DRAW SOME X STITCHS
      */
@@ -283,7 +284,7 @@ const Canvas = props => {
     // stepsBack.draw();
 
     Paper.view.draw();
-    console.log(props.questionvalues)
+
 
   }, [props.questionvalues]);
 
