@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import Question from './Question';
 import QuestionNav from './QuestionNav';
+import SectionNav from './SectionNav';
 import Papa from 'papaparse';
-import Canvas from '../canvas/Canvas';
+import BannerCanvas from '../canvas/BannerCanvas'
+import SVGElement from '../hoc/svg';
 
 import classes from './Questions.module.css';
+
 class Questions extends Component {
   constructor(props) {
     super(props);
@@ -23,17 +26,23 @@ class Questions extends Component {
       // this.values.push(0);
     }
 
+    // for (let element in this.props.svg) {
+    //   svg.push(this.props.svg[element]);
+    // }
+
       return (
-        <div className='formQuestions flex grow-1 flex-col items-start justify-start'>
-          <header className='mb-8 w-full text-left px-12 flex flex-row items-center justify-between mt-12'>
+        <div className='formQuestions flex shrink flex-col items-start justify-center relative'>
+           <SectionNav className="w-full" currentQuestion={this.props.currentQuestion} sections={this.props.sections} currentSection={this.props.currentSection}  sectionNav={(navdata) => this.props.sectionNav(navdata)} ></SectionNav>
+        {/* <BannerCanvas origin={this.props.origin} residence={this.props.residence} resize="false" questionvalues={this.props.questionvalues} className='bannerCanvas relative h-64 ml-12 top-0' stitch='x' /> */}
+          <header className='mb-8 w-full text-left px-12 flex flex-row items-start justify-between mt-12 overflow-hidden'>
             {/* <Canvas className="" stitch='x' /> */}
+
             <section className='flex grow-1 flex-col items-start justify-start'>
-              <h2 className='text-3xl mb-4'>Living & Location</h2>
-              <p className=' w-2/3'>This is the living and location section of the pattern. A section is made up of motifs and symmetries.
-                Motifs are generated using answers to questions in the section, such as this one. Watch the pattern on the right to see how your answers change the design.</p>
+              <h2 className='text-3xl mb-4'>{this.props.sections[this.props.currentSection].title}</h2>
+              <p className=' w-2/3'>{this.props.sections[this.props.currentSection].description}</p>
             </section>
-            <section className='w-48 grow-1'>
-              <h2 className=' min-w-fit text-4xl'>{this.props.currentQuestion + 1} / {questions.length} </h2>
+            <section className=' w-20 grow-1'>
+              <h2 className=' w-20 text-4xl'>{this.props.currentQuestion + 1} / {questions.length} </h2>
             </section>
 
 
@@ -45,6 +54,8 @@ class Questions extends Component {
               )}
           </ul> */}
           <ul className='mb-8 px-12'>
+
+
             {questions[this.props.currentQuestion] !== undefined ?
               <Question
                 change={(e, index) => this.props.changeHandle(e, index)}
@@ -58,8 +69,10 @@ class Questions extends Component {
               >
               </Question> : ''}
           </ul>
-          <QuestionNav questionNav={(data) => this.props.questionNav(data)} ></QuestionNav>
-          <p className=' max-w-lg'>{JSON.stringify(this.props.origin)}</p>
+          <QuestionNav questionNav={(navdata) => this.props.questionNav(navdata)} ></QuestionNav>
+          {/* <p className=' max-w-lg'>{JSON.stringify(this.props.origin)}</p> */}
+
+
         </div>
      );
 }

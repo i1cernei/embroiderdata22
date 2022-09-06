@@ -3,17 +3,18 @@ import Stitch from './Stitch';
 import Paper from 'paper';
 
 class StepPathTwo {
-  constructor(origin, steps, stitchRadius,  directions, colors, type) {
+  constructor(origin, steps, stitchRadius,  directions, colors, type, scope = null) {
     this.directions = directions;
     this.origin = origin;
     this.walker = origin.clone();
     this.steps = steps;
     this.radius = stitchRadius;
-    this.path = new Paper.Path();
+    this.path = (scope !== null) ? new scope.Path() : new Paper.Path();
     this.colors = colors;
     this.color = new Paper.Color(colors[0]);
     this.stitches = [];
     this.type = type;
+    this.scope = scope;
   }
 
   init() {
@@ -49,7 +50,7 @@ class StepPathTwo {
 
       this.path.add(this.walker);
 
-      const stitch = new Stitch(Math.sqrt(2 * (this.radius ** 2)) / 2 - this.radius / 6, this.walker, this.color, this.radius / 2, this.type);
+      const stitch = new Stitch(Math.sqrt(2 * (this.radius ** 2)) / 2 - this.radius / 6, this.walker, this.color, this.radius / 2, this.type, this.scope);
       stitch.draw()
 
       // const circle = new Paper.Path.Circle(this.walker, 2);
