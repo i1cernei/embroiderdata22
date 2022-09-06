@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import Papa from 'papaparse';
 import Questions from "../form/Questions";
-import Canvas from "../canvas/Canvas";
-import NewCanvas from '../canvas/NewCanvas';
+import NewCanvas from "../canvas/NewCanvas";
 
 class Wrap extends Component {
   constructor(props) {
@@ -16,16 +15,27 @@ class Wrap extends Component {
       origin: '',
       residence: '',
       cultures: '',
-      sections: '',
+      sections: [],
+      currentSection: 0,
+      svg: '',
     };
+
+    this.svg = '';
 
     this.questionChange = (event, index) => {
       console.log(event.target.value, index);
-      const currentValues = this.state.questionValues;
 
+      const currentSections = this.state.sections;
+      const currentValues = this.state.sections[this.state.currentSection].questionValues;
       currentValues[index] = Number(event.target.value);
-      this.setState({questionValues: currentValues})
+      currentSections[this.state.currentSection].questionValues = currentValues;
+
+      this.setState({sections: currentSections})
       // console.log(`Question ${index} has changed value to${value}`);
+    }
+    this.handleSVG = (svg) => {
+      console.log(svg);
+      this.svg = svg;
     }
 
     this.countryChange = (event, index) => {
@@ -59,21 +69,38 @@ class Wrap extends Component {
     }
 
 
-    this.questionNav = (data) => {
-      if (data === 'next') {
+    this.questionNav = (navData) => {
+      if (navData === 'next') {
 
 
-        if ((this.state.currentQuestion + 1) > this.state.questionValues.length - 1) {
+        if ((this.state.currentQuestion + 1) > this.state.sections[this.state.currentSection].questionValues.length - 1) {
           this.setState({ currentQuestion: 0 });
         } else {
-          this.setState({ currentQuestion: this.state.currentQuestion + 1 });
+          this.setState({ currentQuestion: this.state.currentQuestion + 1});
         }
       }
       else {
         if (this.state.currentQuestion - 1 < 0) {
-          this.setState({currentQuestion: this.state.questionValues.length - 1})
+          this.setState({currentQuestion: this.state.sections[this.state.currentSection].questionValues.length - 1})
         } else {
           this.setState({ currentQuestion: this.state.currentQuestion - 1 })
+          }
+        }
+    }
+
+    this.sectionNav = (sectionNavData) => {
+      if (sectionNavData === 'next') {
+        if ((this.state.currentSection + 1) > this.state.sections.length - 1) {
+          this.setState({ currentSection: 0 , currentQuestion: 0});
+        } else {
+          this.setState({ currentSection: this.state.currentSection + 1, currentQuestion: 0 });
+        }
+      }
+      else {
+        if (this.state.currentSection - 1 < 0) {
+          this.setState({currentSection: this.state.sections.length - 1, currentQuestion: 0})
+        } else {
+          this.setState({ currentSection: this.state.currentSection - 1 , currentQuestion: 0})
           }
         }
     }
@@ -82,42 +109,61 @@ class Wrap extends Component {
   }
 
 
+
+
 componentDidMount() {
     // let result = {};
       let localData = '';
   const values = [];
 
-  const sectionIDs = [2, 4, 3];
+  const sectionIDs = [2, 4, 3, 5];
   const sections = [];
 
-  sectionIDs.map((id, index) => {
+
+
+
+
+
+  sectionIDs.map(  (id, index) => {
     const values = [];
+    const descriptions = [];
+
+
+
+    fetch(`https://dev.blackandfield.com/embroider/wp-json/wp/v2/categories/${id}`).then(response => response.json())
+      .then(cat => {
+        descriptions.push({ desc: cat.description, title: cat.name });
+      })
+
 
     fetch(`https://dev.blackandfield.com/embroider/wp-json/wp/v2/question/?per_page=100&categories=${id}&order=asc`).then(response => response.json())
-        .then(data => {
+    .then(data => {
 
-          for (let question in data) {
-            values.push(0);
-          }
-          sections[index] = { data, questionValues: values }
+      for (let question in data) {
+        values.push(0);
+      }
 
-        });
+      if(descriptions[index] !== undefined) {
+        sections[index] = { data: data, questionValues: values, description: descriptions[index].desc, title: descriptions[index].title }
+      }
+    });
+
+      this.setState({ sections });
 
       // const $this = this;
-
 
   })
 
 
 
-      fetch('https://dev.blackandfield.com/embroider/wp-json/wp/v2/question/?per_page=100&categories=2&order=asc').then(response => response.json())
-        .then(data => {
+      // fetch('https://dev.blackandfield.com/embroider/wp-json/wp/v2/question/?per_page=100&categories=2&order=asc').then(response => response.json())
+      //   .then(data => {
 
-          for (let question in data) {
-            values.push(0);
-          }
-          this.setState({ data, questionValues: values, sections })
-        });
+      //     for (let question in data) {
+      //       values.push(0);
+      //     }
+      //     this.setState({ data, questionValues: values, sections })
+      //   });
 
       const $this = this;
 
@@ -137,19 +183,27 @@ componentDidMount() {
   render() {
 
     return (
-      <div className="wrap w-full flex flex-row flex-nowrap gap-x-12">
+      <div className="wrap w-full flex flex-row flex-nowrap gap-x-12 relative">
+        {
+          (this.state.sections[this.state.currentSection] !== undefined) ?
         <Questions
-          data={this.state.data}
+          data={this.state.sections[this.state.currentSection].data}
           countries={this.state.countries}
           changeHandle={(e, index) => this.questionChange(e, index)}
           changeCountryHandle={(e) => this.countryChange(e)}
-          questionNav={(data) => this.questionNav(data)}
-          currentQuestion={this.state.currentQuestion}
+              questionNav={(navdata) => this.questionNav(navdata)}
+             sectionNav={(sectionnavdata) => this.sectionNav(sectionnavdata)}
+              currentQuestion={this.state.currentQuestion}
+              sections={this.state.sections} currentSection={this.state.currentSection}
           questionvalues={this.state.questionValues}
-
-        ></Questions>
-        <NewCanvas origin={this.state.origin} residence={this.state.residence} questionvalues={this.state.questionValues} className='w-1/2' stitch='x' />
-      </div>
+          origin={this.state.origin} residence={this.state.residence} svg={this.svg}
+          ></Questions>
+         : ''}
+        {/*  svgOut={(svgdata) => this.handleSVG(svgdata)}  */}
+        { (this.state.sections[this.state.currentSection] !== undefined) ?
+          <NewCanvas className='w-full' origin={this.state.origin} residence={this.state.residence} questionvalues={this.state.sections[this.state.currentSection].questionValues}  stitch='x' />
+         : ''}
+        </div>
     )
   }
 }
