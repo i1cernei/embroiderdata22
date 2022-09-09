@@ -31,7 +31,7 @@ class Questions extends Component {
     // }
 
       return (
-        <div className='formQuestions flex shrink flex-col items-start justify-center relative'>
+        <div className='formQuestions flex shrink flex-col items-start justify-center relative w-1/2'>
            <SectionNav className="w-full" currentQuestion={this.props.currentQuestion} sections={this.props.sections} currentSection={this.props.currentSection}  sectionNav={(navdata) => this.props.sectionNav(navdata)} ></SectionNav>
         {/* <BannerCanvas origin={this.props.origin} residence={this.props.residence} resize="false" questionvalues={this.props.questionvalues} className='bannerCanvas relative h-64 ml-12 top-0' stitch='x' /> */}
           <header className='mb-8 w-full text-left px-12 flex flex-row items-start justify-between mt-12 overflow-hidden'>
@@ -60,8 +60,10 @@ class Questions extends Component {
               <Question
                 change={(e, index) => this.props.changeHandle(e, index)}
                 countryChange={(e) => this.props.changeCountryHandle(e)}
+                changeJob={(e, index) => this.props.changeJobHandle(e, index)}
                 key={this.props.currentQuestion}
                 countries={this.props.countries}
+                section={this.props.currentSection}
                 acf={questions[this.props.currentQuestion].acf}
                 index={this.props.currentQuestion}
                 type={questions[this.props.currentQuestion].acf.question_type}

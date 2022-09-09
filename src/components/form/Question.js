@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { MultiSelect } from 'react-multi-select-component';
 
 class Question extends Component {
   constructor(props) {
@@ -6,6 +7,7 @@ class Question extends Component {
     this.state = {
       selectedOption: 0,
       checkBoxSum: 0,
+      selectedJobs: [],
     }
 
     this.valueChanged = (event) => {
@@ -21,6 +23,21 @@ class Question extends Component {
         checkBoxSum: sum
       });
     }
+
+    this.setSelect = (data, index) => {
+      // console.log('select data', data)
+      let totalValue = 0;
+
+      data.map((job) => {
+        totalValue += Number(job.value);
+      })
+
+      this.props.changeJob(totalValue, index )
+
+      this.setState({ selectedJobs: data });
+
+    }
+    this.setSelect = this.setSelect.bind(this);
   }
 
   render() {
@@ -32,7 +49,7 @@ class Question extends Component {
         input = (
           <input key={this.props.index} onChange={(event) => this.props.change(event, this.props.index)}
             className="text-4xl border-2 border-blue-400 p-6 w-32 bg-transparent rounded-full"
-            type='number' max={7}
+            type='number' max={this.props.section > 0 ? 10 : 7}
             defaultValue={0}
           ></input>);
         break;
@@ -59,7 +76,7 @@ class Question extends Component {
               ></input>
               <label
                 htmlFor={`radio-${this.props.index}-${qindex}`}
-                className='ml-2 text-xl'>
+                className='ml-2 text-sm'>
 
                 {q.choice_label}</label>
             </div>
@@ -79,32 +96,22 @@ class Question extends Component {
       case 3:
         const theoptions = [];
       this.props.acf.question_options.map((q, qindex) => {
-        theoptions.push((
-          <div className="flex items-center flex-row max-w-fit" >
-            <input
-              type='checkbox'
-              onChange={(event) => this.checkboxChanged(event, q.choice_value)}
-              value={q.choice_value}
-              id={`checkbox-${this.props.index}-${qindex}`}
-              className='w-8 h-8'
-            ></input>
-            <label
-              htmlFor={`checkbox-${this.props.index}-${qindex}`}
-              className='ml-2 text-xl'>
 
-              {q.choice_label}</label>
-          </div>
-        ))
+        theoptions.push({
+          label: q.choice_label, value: q.choice_value
+        })
       });
-
-      for (let q of this.props.acf.question_options) {
-
-        }
         input = (
 
-              <div className="flex flex-row flex-wrap max-w-3xl gap-x-4 gap-y-6">
-                {theoptions}
-              </div>
+          <MultiSelect
+            options={theoptions}
+            value={this.state.selectedJobs}
+            hasSelectAll={false}
+            disableSearch={true}
+
+            onChange={(e) => this.setSelect(e, this.props.index)}
+            // labelledBy={"Select"}
+          />
         )
         break;
       case 4:
@@ -136,7 +143,7 @@ class Question extends Component {
          <div className="question_body w-full text-left text-2xl font-bold">
                   <p className="mb-8">{this.props.acf.question_body}</p>
                   </div>
-                <div className="flex flex-row flex-wrap  gap-x-4 gap-y-6">
+                <div className="flex flex-row flex-wrap gap-x-4 gap-y-6">
                 {input}
                 </div>
 

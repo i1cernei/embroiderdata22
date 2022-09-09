@@ -3,15 +3,10 @@ import Paper from 'paper';
 
 import StepPathTwo from '../drawings/StepPathTwo';
 import { StepDiamond } from '../drawings/StepDiamond';
-// import Stitch from '../drawings/Stitch';
+
 import vUp from '../drawings/vUp';
 import vDown from '../drawings/vDown';
-import vLeft from '../drawings/vLeft';
-import vRight from '../drawings/vRight';
-// import { ZigZagHorizontal } from '../drawings/ZigZagHoriz';
-// import { ZigZagVertical } from '../drawings/ZigZagVert';
-// import { toHaveDisplayValue } from '@testing-library/jest-dom/dist/matchers';
-// import { RemoteChunkSize } from 'papaparse';
+
 // import vUp from '../drawings/vUp';
 
 // Color Palettes
@@ -34,7 +29,7 @@ function mapRange (_in, in_min, in_max, out_min, out_max) {
 }
 
 
-class PaperCanvas extends Component {
+class BannerCanvas extends Component {
   constructor(props) {
     super(props);
 
@@ -43,7 +38,7 @@ class PaperCanvas extends Component {
 
     }
 
-    this.scope= new Paper.PaperScope();
+    this.canvasScope = new Paper.PaperScope();
 
     this.palettes = {
       northern: [
@@ -141,8 +136,8 @@ class PaperCanvas extends Component {
     }
 
     this.originCountryDiamonds = [];
-    this.canvasRef = React.createRef();
-    this.canvas = {};
+    this.newRef = React.createRef();
+    this.newCanvas = {};
     this.popSymbol = Math.round(mapRange(this.props.origin.population / 1000000, 0, 210, 7, 25));
     this.radius = 10;
     this.oMinMap = 0;
@@ -172,9 +167,8 @@ class PaperCanvas extends Component {
     // this.residenceMax = Math.max([this.residenceData.popSymbol, this.residenceData.minoritiesPerc, this.residenceData.percContinent]);
     // console.log(this.originMax);
 
-    this.exportSVG = () => {
-      const svg = Paper.project.activeLayer.exportSVG({asString:true});
-      this.props.svgOut(svg);
+    this.export = () => {
+      // const svg = Paper.project.activeLayer.exportSVG();
 
       // console.log(svg);
     }
@@ -213,24 +207,6 @@ class PaperCanvas extends Component {
           colors = this.palettes[`${this.props.origin.cultural_group}`];
         }
 
-        // colors = [colors[1]];
-
-
-        // if (index % 2 === 0) {
-        //   // originDiamonds.x = originDiamond;
-        //   ;
-        //   colors = [colors[2]];
-        // }
-
-        // if (index % 3 === 0) {
-        //   // originDiamonds.x = originDiamond;
-        //   ;
-        //   colors = [colors[1]];
-        // }
-
-        // if (index === 0) {
-        //   colors = this.palettes[`${this.props.origin.cultural_group}`][3];
-        //  }
 
         const stepDiamond = new StepDiamond(
           originDiamonds,
@@ -242,7 +218,7 @@ class PaperCanvas extends Component {
           {
             x: radius * (this.originMax - diamond) / 2,
             y: radius * this.originMax / 2
-          }).init();
+          }, this.canvasScope).init();
         stepDiamond.draw();
         this.originCountryDiamonds.push(stepDiamond);
         // console.log(stepDiamond.paths);
@@ -264,7 +240,7 @@ class PaperCanvas extends Component {
 
         const center = this.originCountryDiamonds[2].paths.topL.getPointAt(i);
 
-        const path = new StepPathTwo(center, length, radius, { x: -1, y: -1 }, diamonds.colors, 'x');
+        const path = new StepPathTwo(center, length, radius, { x: -1, y: -1 }, diamonds.colors, 'x', this.canvasScope);
         path.init().draw();
 
       }
@@ -274,7 +250,7 @@ class PaperCanvas extends Component {
 
         const center = this.originCountryDiamonds[2].paths.topR.getPointAt(i);
 
-        const path = new StepPathTwo(center, length, radius, { x: 1, y: -1 }, diamonds.colors, 'x');
+        const path = new StepPathTwo(center, length, radius, { x: 1, y: -1 }, diamonds.colors, 'x', this.canvasScope);
         path.init().draw();
 
       }
@@ -284,7 +260,7 @@ class PaperCanvas extends Component {
 
         const center = this.originCountryDiamonds[2].paths.bottomR.getPointAt(i);
 
-        const path = new StepPathTwo(center, length, radius, { x: 1, y: 1 }, diamonds.colors, 'x');
+        const path = new StepPathTwo(center, length, radius, { x: 1, y: 1 }, diamonds.colors, 'x', this.canvasScope);
         path.init().draw();
 
       }
@@ -294,7 +270,7 @@ class PaperCanvas extends Component {
 
         const center = this.originCountryDiamonds[2].paths.bottomL.getPointAt(i);
 
-        const path = new StepPathTwo(center, length, radius, { x: -1, y: 1 }, diamonds.colors, 'x');
+        const path = new StepPathTwo(center, length, radius, { x: -1, y: 1 }, diamonds.colors, 'x', this.canvasScope);
         path.init().draw();
 
       }
@@ -314,7 +290,8 @@ class PaperCanvas extends Component {
           radius,
           { x: 1, y: 0 },
           [diamonds.colors[i], diamonds.colors[1]],
-          'x'
+          'x',
+          this.canvasScope
         ).init().draw();
 
       }
@@ -329,7 +306,9 @@ class PaperCanvas extends Component {
           radius,
           { x: 1, y: 0 },
           [diamonds.colors[i], diamonds.colors[1]],
-          'x'
+          'x',
+          this.canvasScope
+
         ).init().draw();
 
       }
@@ -360,8 +339,6 @@ class PaperCanvas extends Component {
           y: 0,
           }
       }
-
-        // console.log(this.originMax)
 
         const _vUp = new vUp(
           origin,
@@ -431,254 +408,27 @@ class PaperCanvas extends Component {
 
         }
 
-        // const minMap = Math.round(mapRange(this.props.residence.minorities, 1, 20, 1, 12));
-
-        // for (let i = 0; i < minMap; i++) {
-        //   const center = new Paper.Point(
-        //     origin.x + (this.originMax * this.radius / 2) - i / 2 * this.radius - this.radius / 2 + config.offset.x / 1.5,
-        //     origin.y + i * this.radius + this.originMax * this.radius / 2);
-
-        //   const path = new StepPathTwo(
-        //     center,
-        //     i,
-        //     this.radius,
-        //     { x: 1, y: 0 },
-        //     config.colors,
-        //     'x'
-        //   ).init()
-        //   path.draw();
-
-        // }
-
-
-        // for (let i = minMap; i > 0; i--) {
-        //   const center = new Paper.Point(origin.x + (this.originMax * radius / 2) - i / 2 * radius - radius / 2, origin.y - i * radius);
-
-        //   const path = new StepPathTwo(
-        //     center,
-        //     i,
-        //     radius,
-        //     { x: 1, y: 0 },
-        //     diamonds.colors,
-        //     'x'
-        //   ).init().draw();
-
-        // }
-
-
-      }
-
-
-
-    }
-
-    this.drawHomeData = (origin) => {
-      const colors = this.palettes[`${this.props.residence.cultural_group}`] || ['black', 'purple', 'red'];
-      const measure = this.originMax - 7 + this.props.livingdata[4] * 2;
-      const config = {
-        radius: this.radius,
-        steps: measure,
-        colors: [colors[3], colors[4]],
-        offset: {
-          x: 0,
-          y: 0
-        }
-      };
-
-        const stepDiamond = new StepDiamond(
-          origin,
-          config,
-         config.offset
-          ).init();
-      stepDiamond.draw();
-
-
-        for (let i = 0; i < 1; i++) {
-          const center = new Paper.Point(
-            origin.x + this.radius * measure - this.radius,
-            origin.y + i * this.radius + config.offset.y);
-
-          const path = new StepPathTwo(
-            center,
-            this.props.livingdata[7] + 3 ,
-            this.radius,
-            { x: 1, y: 0 },
-            colors,
-            'x'
-          ).init()
-
-          path.draw();
-          // console.log(path.path.length);
-
-
-
-          if (this,props.livingdata[2] !== 0) {
-            const path = new StepPathTwo(
-              new Paper.Point(center.x - 4 * this.radius, center.y),
-              3 ,
-              this.radius,
-              { x: 1, y: 0 },
-              [colors[2]],
-              'x'
-            ).init()
-
-            path.draw();
-            const _path = new StepPathTwo(
-              new Paper.Point(center.x - 2 * this.radius, center.y - 2 * this.radius ),
-              3 ,
-              this.radius,
-              { x: 0, y: 1 },
-              [colors[2]],
-              'x'
-            ).init()
-
-            _path.draw();
-          }
-
-          if (this.props.livingdata[3] !== 0) {
-
-            let cols;
-            if (this,props.livingdata[2] > 0) {
-              cols = [colors[this.props.livingdata[2]]];
-            } else {
-              cols = colors;
-            }
-
-            const vConf = {
-              radius: this.radius,
-              steps: measure / 2,
-              colors: cols,
-              offset: {
-                x: this.originMax * this.radius / 4,
-                y: 0
-              }
-            };
-            const end = path.path.getPointAt(path.path.length);
-            const _vLeft = new vRight(center, vConf);
-            _vLeft.init();
-            _vLeft.draw();
-
-
-          const _vConf = {
-            radius: this.radius,
-            steps: measure / 3,
-            colors: cols,
-            offset: {
-              x: this.originMax * this.radius - 3 * this.radius,
-              y: 0
-            }
-          };
-          // const end = path.path.getPointAt(path.path.length);
-          const _vRight = new vRight(center, _vConf);
-          _vRight.init();
-          _vRight.draw();
-
-          }
-
-          if (this.props.livingdata[5] !== 0) {
-
-            const vConf = {
-              radius: this.radius,
-              steps: this.props.livingdata[5] ,
-              colors,
-              offset: {
-                x: this.originMax * this.radius / 2,
-                y: 0
-              }
-            };
-            const end = path.path.getPointAt(path.path.length);
-            const _vLeft = new vRight(center, vConf);
-            _vLeft.init();
-            _vLeft.draw();
-
-          }
-
-          if (this.props.livingdata[6] !== 0) {
-
-            const vConf = {
-              radius: this.radius,
-              steps: this.props.livingdata[6] - 2,
-              colors:[colors[3], colors[2]],
-              offset: {
-                x: - this.props.livingdata[6] * this.radius + 2 * this.radius,
-                y: 0
-              }
-            };
-            const end = path.path.getPointAt(path.path.length);
-            const _vleft = new vLeft(center, vConf);
-            _vleft.init();
-            _vleft.draw();
-
-          }
-
-          if (this.props.livingdata[7] !== 0) {
-
-            const vConf = {
-              radius: this.radius,
-              steps: this.props.livingdata[6] - 1,
-              colors:[colors[3], colors[2]],
-              offset: {
-                x: - this.props.livingdata[6] * this.radius / 2,
-                y: 0
-              }
-            };
-            const end = path.path.getPointAt(path.path.length);
-            const _vleft = new vLeft(center, vConf);
-            // _vleft.init();
-            // _vleft.draw();
-
-          }
-
-          if (this.props.livingdata[8] !== 0) {
-
-            const end = path.path.getPointAt(path.path.length);
-
-            const vConf = {
-              radius: this.radius,
-              steps:this.props.livingdata[8] - 3,
-              colors: [colors[3]],
-              offset: {
-                x: this.originMax * this.radius + this.props.livingdata[7]/2 * this.radius - 2 * this.radius,
-                y: 0
-              }
-            };
-
-            const _vLeft = new vLeft(center, vConf);
-            _vLeft.init();
-            _vLeft.draw();
-            // const _vDown = new vDown(center, vConf);
-            // _vDown.init();
-            // _vDown.draw();
-
-          }
-
-
-
-
       }
     }
-
   }
 
   componentDidMount() {
 
-    this.canvas = this.canvasRef.current;
+    this.newCanvas = this.newRef.current;
 
-    this.scope.setup(this.canvas);
-    this.scope.activate();
+    this.canvasScope.setup(this.newCanvas);
+    // this.canvasScope.activate();
     // console.log(this.props.questionvalues);
     if (Paper !== undefined) {
-      this.scope.project.activeLayer.removeChildren();
+      this.canvasScope.project.activeLayer.removeChildren();
       // this.drawOriginCountryData(new Paper.Point(0, 200));
-      for (let i = 0; i < 3; i++) {
-        this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.residenceMax * this.radius* i , this.radius * this.originMax * 2));
-        // this.drawOriginCountryData(new Paper.Point(i * 2 * this.originMax * this.radius, 200));
-        this.drawResidenceCountryData(new Paper.Point(i * this.originMax * this.radius + this.residenceMax * this.radius * i , this.radius * this.originMax * 2 + this.originMax * this.radius / 2));
+      for (let i = 0; i < 5; i++) {
+        this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
       }
-
-      for (let i = 0; i < 3; i++) {
-        this.drawHomeData(new Paper.Point( 100 +i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i * this.props.livingdata[7] * this.radius, this.radius * this.originMax * 2 - this.originMax * this.radius +  this.radius ));
-        this.drawHomeData(new Paper.Point(100+ i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i *  this.props.livingdata[7] * this.radius , this.radius * this.originMax * 2 + this.originMax * this.radius * 1.5 + 4 * this.radius ));
+      for (let i = 0; i < 4; i++) {
+        if (this.props.residence !== '') {
+          this.drawResidenceCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius * i ,  this.radius * this.originMax / 2 + this.originMax * this.radius / 2));
+        }
       }
     }
 
@@ -686,40 +436,29 @@ class PaperCanvas extends Component {
   }
 
   componentDidUpdate() {
-    this.scope.activate()
-    this.scope.project.activeLayer.removeChildren();
+    this.canvasScope.activate();
+    this.canvasScope.project.activeLayer.removeChildren();
       if (Paper !== undefined) {
         // this.drawOriginCountryData(new Paper.Point(0, 200));
-        for (let i = 0; i < 3; i++) {
-          this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax * 2));
+        for (let i = 0; i < 5; i++) {
+          this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
+        }
+        for (let i = 0; i < 4; i++) {
           if (this.props.residence !== '') {
-            this.drawResidenceCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius * i ,  this.radius * this.originMax * 2 + this.originMax * this.radius / 2));
+            this.drawResidenceCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius * i ,  this.radius * this.originMax / 2 + this.originMax * this.radius / 2));
           }
-          // this.drawHomeData(new Paper.Point(i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i , 2 * this.originMax * this.radius + 2 * this.radius ));
-          // this.drawResidenceCountryData(new Paper.Point(i * 2 * this.originMax * this.radius, 200));
-
-
         }
-
-        for (let i = 0; i < 3; i++) {
-          this.drawHomeData(new Paper.Point( 100 +i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i * (this.props.livingdata[7] + 4)* this.radius, this.radius * this.originMax * 2 - this.originMax * this.radius +  this.radius ));
-          this.drawHomeData(new Paper.Point(100+ i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i *  (this.props.livingdata[7] + 4) * this.radius , this.radius * this.originMax * 2 + this.originMax * this.radius * 1.5 + 4 * this.radius ));
-        }
-
-        // this.exportSVG();
       }
     }
 
   render() {
-    if (Paper.view !== null) {
-      Paper.view.draw();
+    if (this.canvasScope.view !== null) {
+      this.canvasScope.view.draw();
     }
     return (
-
-        <canvas ref={this.canvasRef} {...this.props} id="canvas" resize="true" width={'100%'} height='auto' />
-
+        <canvas className=' ' ref={this.newRef} {...this.props} id="canvas2" resize='true'/>
     )
   }
 }
 
-export default PaperCanvas;
+export default BannerCanvas;

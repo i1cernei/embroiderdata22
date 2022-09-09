@@ -33,6 +33,21 @@ class Wrap extends Component {
       this.setState({sections: currentSections})
       // console.log(`Question ${index} has changed value to${value}`);
     }
+
+
+    this.jobChange = (value, index) => {
+      // console.log(event.target.value, index);
+
+      const currentSections = this.state.sections;
+      const currentValues = this.state.sections[this.state.currentSection].questionValues;
+      currentValues[index] = Number(value);
+      currentSections[this.state.currentSection].questionValues = currentValues;
+
+      this.setState({sections: currentSections})
+      // console.log(`Question ${index} has changed value to${value}`);
+    }
+
+
     this.handleSVG = (svg) => {
       console.log(svg);
       this.svg = svg;
@@ -111,48 +126,65 @@ class Wrap extends Component {
 
 
 
-componentDidMount() {
+componentWillMount() {
     // let result = {};
       let localData = '';
   const values = [];
 
   const sectionIDs = [2, 4, 3, 5];
   const sections = [];
+  const descriptions = [];
 
 
 
+  const sectionData = [];
+
+
+  fetch(`https://dev.blackandfield.com/embroider/wp-json/wp/v2/categories/?order_by=id&order=asc`).then(response => response.json())
+      .then(data => {
+        // descriptions.push({ desc: cat.description, title: cat.name });
+        data.map((val, index) => {
+          if (val.id !== 1) {
+            sectionData.push(val);
+          }
+        })
+
+        sectionData.sort(function(a, b) {
+          return a.id - b.id;
+        });
+
+
+        sectionData.map((value, index) => {
+          const values = [];
+
+          fetch(`https://dev.blackandfield.com/embroider/wp-json/wp/v2/question/?per_page=100&categories=${sectionData[index].id}&order=asc`).then(response => response.json())
+          .then(data => {
+
+            for (let question in data) {
+              values.push(0);
+            }
+
+            // if(sectionData[index] !== undefined) {
+            sections[index] = { data: data, questionValues: values, description: sectionData[index].description, title: sectionData[index].name }
+            this.setState({ sections });
+            // }
+          }).catch(e => {console.log(e)});
+
+          this.setState({ sections });
+          console.log(sections)
+
+          })
 
 
 
-  sectionIDs.map(  (id, index) => {
-    const values = [];
-    const descriptions = [];
-
-
-
-    fetch(`https://dev.blackandfield.com/embroider/wp-json/wp/v2/categories/${id}`).then(response => response.json())
-      .then(cat => {
-        descriptions.push({ desc: cat.description, title: cat.name });
+        console.log(sectionData);
+      }).catch(e => {
+        console.log(e);
       })
 
 
-    fetch(`https://dev.blackandfield.com/embroider/wp-json/wp/v2/question/?per_page=100&categories=${id}&order=asc`).then(response => response.json())
-    .then(data => {
 
-      for (let question in data) {
-        values.push(0);
-      }
 
-      if(descriptions[index] !== undefined) {
-        sections[index] = { data: data, questionValues: values, description: descriptions[index].desc, title: descriptions[index].title }
-      }
-    });
-
-      this.setState({ sections });
-
-      // const $this = this;
-
-  })
 
 
 
@@ -183,26 +215,40 @@ componentDidMount() {
   render() {
 
     return (
-      <div className="wrap w-full flex flex-row flex-nowrap gap-x-12 relative">
+      <div className="wrap w-full flex flex-row flex-nowrap gap-x-12 relative items-start">
         {
-          (this.state.sections[this.state.currentSection] !== undefined) ?
+            this.state.sections[this.state.currentSection] !== undefined
+             ?
         <Questions
           data={this.state.sections[this.state.currentSection].data}
           countries={this.state.countries}
           changeHandle={(e, index) => this.questionChange(e, index)}
           changeCountryHandle={(e) => this.countryChange(e)}
-              questionNav={(navdata) => this.questionNav(navdata)}
-             sectionNav={(sectionnavdata) => this.sectionNav(sectionnavdata)}
-              currentQuestion={this.state.currentQuestion}
-              sections={this.state.sections} currentSection={this.state.currentSection}
-          questionvalues={this.state.questionValues}
-          origin={this.state.origin} residence={this.state.residence} svg={this.svg}
+          changeJobHandle={(e, index) => this.jobChange(e, index)}
+          questionNav={(navdata) => this.questionNav(navdata)}
+          sectionNav={(sectionnavdata) => this.sectionNav(sectionnavdata)}
+          currentQuestion={this.state.currentQuestion}
+              sections={this.state.sections}
+              currentSection={this.state.currentSection}
+              questionvalues={this.state.sections[0].questionValues}
+              // livingdata={this.state.sections[0].questionValues}
+              origin={this.state.origin}
+              residence={this.state.residence} svg={this.svg}
           ></Questions>
-         : ''}
+          : '' }
         {/*  svgOut={(svgdata) => this.handleSVG(svgdata)}  */}
         { (this.state.sections[this.state.currentSection] !== undefined) ?
-          <NewCanvas className='w-full' origin={this.state.origin} residence={this.state.residence} questionvalues={this.state.sections[this.state.currentSection].questionValues}  stitch='x' />
-         : ''}
+          <NewCanvas
+            className={'w-1/2 h-full'}
+            origin={this.state.origin}
+            residence={this.state.residence}
+            livingdata={this.state.sections[0].questionValues}
+            sections={this.state.sections}
+            questionvalues={this.state.sections[this.state.currentSection].questionValues}
+            width="100%"
+            height="auto"
+            stitch='x' />
+          : ''}
         </div>
     )
   }
