@@ -42,7 +42,7 @@ class WorkCanvas extends Component {
 
     this.workCanvasScope = new Paper.PaperScope();
 
-    this.radius = 6;
+    this.radius = 10;
     this.palettes = {
       northern: [
         '#ffca00',
@@ -156,107 +156,109 @@ class WorkCanvas extends Component {
 
       const bigVUp = new vUp(origin, {
         radius: this.radius,
-        steps: 40,
-        colors:[originColors[3], originColors[2]],
+        steps: 30,
+        colors:[originColors[1], originColors[2]],
         offset: {
                 x: 20 * this.radius,
-                y: -3 * this.radius
+                y: 2 * this.radius
               },
       })
 
-      elements.push(bigVUp);
 
       const bigVDown = new vDown(origin, {
         radius: this.radius,
-        steps: 40,
-        colors:[originColors[3], originColors[2]],
+        steps: 30,
+        colors:[originColors[1], originColors[2]],
         offset: {
                 x: 20 * this.radius,
-                y: 37 * this.radius
+                y: 32 * this.radius
               },
       })
 
       const smallVDown = new vDown(origin, {
         radius: this.radius,
-        steps: 15,
+        steps: 14,
         colors:[originColors[3], originColors[2]],
         offset: {
                 x: 20 * this.radius,
-                y: 3 * this.radius
-              },
-      })
-
-      const otherVDown = new vDown(origin, {
-        radius: this.radius,
-        steps: 15,
-        colors:[originColors[3], originColors[2]],
-        offset: {
-                x: 20 * this.radius,
-                y: 8 * this.radius
-              },
-      })
-
-      const firstLeftV = new vLeft(origin, {
-        radius: this.radius,
-        steps: 15,
-        colors:[originColors[3], originColors[2]],
-        offset: {
-                x: 32.5 * this.radius,
-                y: 17 * this.radius
-              },
-      })
-
-      const secondLeftV = new vLeft(origin, {
-        radius: this.radius,
-        steps: 21,
-        colors:[originColors[3], originColors[2]],
-        offset: {
-                x: 27.5 * this.radius,
-                y: 17 * this.radius
-              },
-      })
-
-      const firstRightV = new vRight(origin, {
-        radius: this.radius,
-        steps: 15,
-        colors:[originColors[3], originColors[2]],
-        offset: {
-                x: 7.5 * this.radius,
-                y: 17 * this.radius
-              },
-      })
-
-      const secondRightV = new vRight(origin, {
-        radius: this.radius,
-        steps: 21,
-        colors:[originColors[3], originColors[2]],
-        offset: {
-                x: 13.5 * this.radius,
-                y: 17 * this.radius
+                y: 15.5 * this.radius
               },
       })
 
       const smallVUp = new vUp(origin, {
         radius: this.radius,
-        steps: 25,
+        steps: 15,
         colors:[originColors[3], originColors[2]],
         offset: {
                 x: 20 * this.radius,
-                y: 30 * this.radius
+                y: 17.5 * this.radius
               },
       })
+
+      const otherVDown = new vDown(origin, {
+        radius: this.radius,
+        steps: 20,
+        colors:[originColors[0], originColors[2]],
+        offset: {
+                x: 20 * this.radius,
+                y: 9 * this.radius
+              },
+      })
+
+      // const firstLeftV = new vLeft(origin, {
+      //   radius: this.radius,
+      //   steps: 10,
+      //   colors:[originColors[3], originColors[2]],
+      //   offset: {
+      //           x: 25 * this.radius,
+      //           y: 17 * this.radius
+      //         },
+      // })
+
+      const secondLeftV = new vLeft(origin, {
+        radius: this.radius,
+        steps: 22,
+        colors:[originColors[0], originColors[2]],
+        offset: {
+                x: 26 * this.radius,
+                y: 17 * this.radius
+              },
+      })
+
+      // const firstRightV = new vRight(origin, {
+      //   radius: this.radius,
+      //   steps: 15,
+      //   colors:[originColors[3], originColors[2]],
+      //   offset: {
+      //           x: 7.5 * this.radius,
+      //           y: 17 * this.radius
+      //         },
+      // })
+
+      const secondRightV = new vRight(origin, {
+        radius: this.radius,
+        steps: 22,
+        colors:[originColors[0], originColors[2]],
+        offset: {
+                x: 14 * this.radius,
+                y: 17 * this.radius
+              },
+      })
+
+
 
       const otherVUp = new vUp(origin, {
         radius: this.radius,
-        steps: 20,
-        colors:[originColors[3], originColors[2]],
+        steps: 22,
+        colors:[originColors[0], originColors[2]],
         offset: {
                 x: 20 * this.radius,
-                y: 25 * this.radius
+                y: 24 * this.radius
               },
       })
+      //firstLeftV, firstRightV
 
-      elements.push(bigVDown, smallVDown, otherVDown, firstLeftV, secondLeftV, firstRightV, secondRightV, smallVUp, otherVUp);
+      elements.push(smallVDown, otherVDown, secondLeftV, secondRightV, smallVUp, otherVUp, bigVDown, bigVUp);
 
       elements.map(el => {
         el.init().draw();
@@ -270,6 +272,92 @@ class WorkCanvas extends Component {
       // bigVDown.init().draw();
 
     }
+
+    this.drawSecondSymbol = (origin) => {
+      // const livingColors = this.palettes[`${this.props.residence.cultural_group}`] || ['black', 'purple', 'red'];
+      const originColors = this.palettes[`${this.props.origin.cultural_group}`] || ['black', 'purple', 'red'];
+      const elements = [];
+
+
+      const bigRightV = new vLeft(origin, {
+        radius: this.radius,
+        steps: 40,
+        colors:[originColors[1], originColors[2]],
+        offset: {
+                x: -15 * this.radius,
+                y: 17 * this.radius
+              },
+      })
+
+      const bigRightV2 = new vLeft(origin, {
+        radius: this.radius,
+        steps: 40,
+        colors:[originColors[1], originColors[2]],
+        offset: {
+                x: -14 * this.radius,
+                y: 17 * this.radius
+              },
+      })
+
+      const bigLeftV = new vRight(origin, {
+        radius: this.radius,
+        steps: 40,
+        colors:[originColors[1], originColors[2]],
+        offset: {
+                x: 15 * this.radius,
+                y: 17 * this.radius
+              },
+      })
+
+      const smallTopV = new vDown(origin, {
+        radius: this.radius,
+        steps: 20,
+        colors:[originColors[1], originColors[2]],
+        offset: {
+                x: 0,
+                y: 10 * this.radius
+              },
+      })
+
+      const smallBottomV = new vUp(origin, {
+        radius: this.radius,
+        steps: 20,
+        colors:[originColors[1], originColors[2]],
+        offset: {
+                x: 0,
+                y: 24 * this.radius
+              },
+      })
+
+      const smallLeftV = new vRight(origin, {
+        radius: this.radius,
+        steps: 22,
+        colors:[originColors[0], originColors[2]],
+        offset: {
+                x: -5 * this.radius,
+                y: 17 * this.radius
+              },
+      })
+
+      const smallRightV = new vLeft(origin, {
+        radius: this.radius,
+        steps: 22,
+        colors:[originColors[0], originColors[2]],
+        offset: {
+                x: 5 * this.radius,
+                y: 17 * this.radius
+              },
+      })
+
+
+      elements.push(bigLeftV, bigRightV, smallTopV, smallBottomV, smallLeftV, smallRightV);
+
+      elements.map(el => {
+        el.init().draw();
+        return null;
+      })
+    }
+
 
   }
 
@@ -287,6 +375,7 @@ class WorkCanvas extends Component {
       //   // this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
       // }
       this.drawFirstSymbol(new Paper.Point(this.radius, 10 * this.radius));
+      this.drawSecondSymbol(new Paper.Point(this.radius * 55,  10 * this.radius));
     }
 
 
@@ -301,6 +390,7 @@ class WorkCanvas extends Component {
           // this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
         }
         this.drawFirstSymbol(new Paper.Point(this.radius, 10 * this.radius));
+        this.drawSecondSymbol(new Paper.Point(this.radius * 55,  10 * this.radius));
       }
     }
 
