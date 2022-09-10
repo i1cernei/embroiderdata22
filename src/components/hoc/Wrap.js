@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Papa from 'papaparse';
 import Questions from "../form/Questions";
 import NewCanvas from "../canvas/NewCanvas";
+import WorkCanvas from "../canvas/WorkCanvas";
 
 class Wrap extends Component {
   constructor(props) {
@@ -238,16 +239,27 @@ componentWillMount() {
           : '' }
         {/*  svgOut={(svgdata) => this.handleSVG(svgdata)}  */}
         { (this.state.sections[this.state.currentSection] !== undefined) ?
-          <NewCanvas
-            className={'w-1/2 h-full'}
-            origin={this.state.origin}
-            residence={this.state.residence}
-            livingdata={this.state.sections[0].questionValues}
-            sections={this.state.sections}
-            questionvalues={this.state.sections[this.state.currentSection].questionValues}
-            width="100%"
-            height="auto"
-            stitch='x' />
+          <div className="canvases w-1/2 h-full flex flex-row flex-wrap relative">
+            <NewCanvas
+              className={'w-full h-96 origin-top-left'}
+              origin={this.state.origin}
+              residence={this.state.residence}
+              livingdata={this.state.sections[0].questionValues}
+              sections={this.state.sections}
+              questionvalues={this.state.sections[this.state.currentSection].questionValues}
+              width="100%"
+              height="auto"
+              stitch='x' />
+            <WorkCanvas
+              className={'h-full w-full'}
+              origin={this.state.origin}
+              residence={this.state.residence}
+              data={this.state.sections[1].questionValues}
+              sections={this.state.sections}
+              width="100%"
+              height="auto"
+              stitch='x' />
+          </div>
           : ''}
         </div>
     )

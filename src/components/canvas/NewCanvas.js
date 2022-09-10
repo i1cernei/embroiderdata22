@@ -144,7 +144,7 @@ class PaperCanvas extends Component {
     this.canvasRef = React.createRef();
     this.canvas = {};
     this.popSymbol = Math.round(mapRange(this.props.origin.population / 1000000, 0, 210, 7, 25));
-    this.radius = 10;
+
     this.oMinMap = 0;
 
     this.originData = {
@@ -152,7 +152,6 @@ class PaperCanvas extends Component {
       minoritiesPerc: Math.round(mapRange(14, 0, 50, 3, 10)),
       percContinent: Math.round(mapRange(0.1, 0, 34, 20000000 / 1000000 + 2, 15))
     }
-
 
     this.residenceData = {};
     this.residenceData.popSymbol = Math.round(mapRange(this.props.residence.population / 1000000, 0, 210, 7, 25));
@@ -168,6 +167,7 @@ class PaperCanvas extends Component {
 
 
     this.originMax = Math.max([this.originData.popSymbol, this.originData.minoritiesPerc, this.originData.percContinent]);
+    this.radius = this.residenceMax > 15 || this.originMax > 10 ? 3 : 7;
 
     // this.residenceMax = Math.max([this.residenceData.popSymbol, this.residenceData.minoritiesPerc, this.residenceData.percContinent]);
     // console.log(this.originMax);
@@ -191,7 +191,7 @@ class PaperCanvas extends Component {
 
       /* It's creating an object with the properties of radius, colors, and steps. */
       const diamonds = {
-        radius: 12,
+        radius: this.radius,
         colors: this.palettes[`${this.props.origin.cultural_group}`],
         steps: [
           this.originData.popSymbol,
@@ -201,9 +201,10 @@ class PaperCanvas extends Component {
         ]
       };
 
-      this.originMax = Math.max(...diamonds.steps)
+      this.originMax = Math.max(...diamonds.steps);
+      this.radius = this.residenceMax > 15 || this.originMax > 10 ? 6 : 10;
       let colors = diamonds.colors || ['black'];
-      let radius = 10;
+      let radius = this.radius;
 
       // console.log(popmil);
       diamonds.steps.map((diamond, index) => {
@@ -213,24 +214,6 @@ class PaperCanvas extends Component {
           colors = this.palettes[`${this.props.origin.cultural_group}`];
         }
 
-        // colors = [colors[1]];
-
-
-        // if (index % 2 === 0) {
-        //   // originDiamonds.x = originDiamond;
-        //   ;
-        //   colors = [colors[2]];
-        // }
-
-        // if (index % 3 === 0) {
-        //   // originDiamonds.x = originDiamond;
-        //   ;
-        //   colors = [colors[1]];
-        // }
-
-        // if (index === 0) {
-        //   colors = this.palettes[`${this.props.origin.cultural_group}`][3];
-        //  }
 
         const stepDiamond = new StepDiamond(
           originDiamonds,
@@ -349,7 +332,8 @@ class PaperCanvas extends Component {
           this.residenceData.minoritiesPerc,
           this.residenceData.percContinent
         ];
-      this.residenceMax = Number(Math.max(...spreadable));
+        this.residenceMax = Number(Math.max(...spreadable));
+        this.radius = this.residenceMax > 15 || this.originMax > 10 ? 6 : 10;
 
       const config = {
         radius: this.radius,
@@ -431,40 +415,6 @@ class PaperCanvas extends Component {
 
         }
 
-        // const minMap = Math.round(mapRange(this.props.residence.minorities, 1, 20, 1, 12));
-
-        // for (let i = 0; i < minMap; i++) {
-        //   const center = new Paper.Point(
-        //     origin.x + (this.originMax * this.radius / 2) - i / 2 * this.radius - this.radius / 2 + config.offset.x / 1.5,
-        //     origin.y + i * this.radius + this.originMax * this.radius / 2);
-
-        //   const path = new StepPathTwo(
-        //     center,
-        //     i,
-        //     this.radius,
-        //     { x: 1, y: 0 },
-        //     config.colors,
-        //     'x'
-        //   ).init()
-        //   path.draw();
-
-        // }
-
-
-        // for (let i = minMap; i > 0; i--) {
-        //   const center = new Paper.Point(origin.x + (this.originMax * radius / 2) - i / 2 * radius - radius / 2, origin.y - i * radius);
-
-        //   const path = new StepPathTwo(
-        //     center,
-        //     i,
-        //     radius,
-        //     { x: 1, y: 0 },
-        //     diamonds.colors,
-        //     'x'
-        //   ).init().draw();
-
-        // }
-
 
       }
 
@@ -474,6 +424,7 @@ class PaperCanvas extends Component {
 
     this.drawHomeData = (origin) => {
       const colors = this.palettes[`${this.props.residence.cultural_group}`] || ['black', 'purple', 'red'];
+      this.radius = this.residenceMax > 15 || this.originMax > 10 ? 6 : 10;
       const measure = this.originMax - 7 + this.props.livingdata[4] * 2;
       const config = {
         radius: this.radius,
@@ -677,8 +628,8 @@ class PaperCanvas extends Component {
       }
 
       for (let i = 0; i < 3; i++) {
-        this.drawHomeData(new Paper.Point( 100 +i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i * this.props.livingdata[7] * this.radius, this.radius * this.originMax * 2 - this.originMax * this.radius +  this.radius ));
-        this.drawHomeData(new Paper.Point(100+ i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i *  this.props.livingdata[7] * this.radius , this.radius * this.originMax * 2 + this.originMax * this.radius * 1.5 + 4 * this.radius ));
+        this.drawHomeData(new Paper.Point( 10 +i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i * this.props.livingdata[7] * this.radius, this.radius * this.originMax * 2 - this.originMax * this.radius +  this.radius ));
+        this.drawHomeData(new Paper.Point(10+ i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i *  this.props.livingdata[7] * this.radius , this.radius * this.originMax * 2 + this.originMax * this.radius * 1.5 + 4 * this.radius ));
       }
     }
 
@@ -686,6 +637,7 @@ class PaperCanvas extends Component {
   }
 
   componentDidUpdate() {
+
     this.scope.activate()
     this.scope.project.activeLayer.removeChildren();
       if (Paper !== undefined) {
@@ -702,8 +654,8 @@ class PaperCanvas extends Component {
         }
 
         for (let i = 0; i < 3; i++) {
-          this.drawHomeData(new Paper.Point( 100 +i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i * (this.props.livingdata[7] + 4)* this.radius, this.radius * this.originMax * 2 - this.originMax * this.radius +  this.radius ));
-          this.drawHomeData(new Paper.Point(100+ i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i *  (this.props.livingdata[7] + 4) * this.radius , this.radius * this.originMax * 2 + this.originMax * this.radius * 1.5 + 4 * this.radius ));
+          this.drawHomeData(new Paper.Point( 10 +i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i * (this.props.livingdata[7] + 4)* this.radius, this.radius * this.originMax * 2 - this.originMax * this.radius +  this.radius ));
+          this.drawHomeData(new Paper.Point(10+ i * this.originMax * this.radius + (this.originMax - 5) * this.radius * i + i *  (this.props.livingdata[7] + 4) * this.radius , this.radius * this.originMax * 2 + this.originMax * this.radius * 1.5 + 4 * this.radius ));
         }
 
         // this.exportSVG();

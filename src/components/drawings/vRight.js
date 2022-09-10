@@ -2,10 +2,10 @@
 import StepPathTwo from "./StepPathTwo";
 
 class vRight {
-  constructor(origin, config, offset) {
+  constructor(origin, config) {
     this.origin = origin.clone();
     this.config = config;
-    this.offset = offset;
+    // this.offset = offset;
     this.paths = [];
   }
 
