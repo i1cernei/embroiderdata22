@@ -60,7 +60,7 @@ class Questions extends Component {
               <Question
                 change={(e, index) => this.props.changeHandle(e, index)}
                 countryChange={(e) => this.props.changeCountryHandle(e)}
-                changeJob={(e, index) => this.props.changeJobHandle(e, index)}
+                changeJob={(value, index, jobs) => this.props.changeJobHandle(value, index, jobs)}
                 key={this.props.currentQuestion}
                 countries={this.props.countries}
                 section={this.props.currentSection}

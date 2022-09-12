@@ -36,13 +36,15 @@ class Wrap extends Component {
     }
 
 
-    this.jobChange = (value, index) => {
+    this.jobChange = (value, index, jobs) => {
       // console.log(event.target.value, index);
 
       const currentSections = this.state.sections;
       const currentValues = this.state.sections[this.state.currentSection].questionValues;
-      currentValues[index] = Number(value);
+      currentValues[index] = value;
+      console.log('Jobs: ', jobs);
       currentSections[this.state.currentSection].questionValues = currentValues;
+
 
       this.setState({sections: currentSections})
       // console.log(`Question ${index} has changed value to${value}`);
@@ -125,7 +127,10 @@ class Wrap extends Component {
   }
 
 
-
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    console.log(error, errorInfo);
+  }
 
 componentWillMount() {
     // let result = {};
@@ -225,7 +230,7 @@ componentWillMount() {
           countries={this.state.countries}
           changeHandle={(e, index) => this.questionChange(e, index)}
           changeCountryHandle={(e) => this.countryChange(e)}
-          changeJobHandle={(e, index) => this.jobChange(e, index)}
+          changeJobHandle={(value, index, jobs) => this.jobChange(value, index, jobs)}
           questionNav={(navdata) => this.questionNav(navdata)}
           sectionNav={(sectionnavdata) => this.sectionNav(sectionnavdata)}
           currentQuestion={this.state.currentQuestion}
@@ -254,7 +259,7 @@ componentWillMount() {
               className={'h-full w-full'}
               origin={this.state.origin}
               residence={this.state.residence}
-              data={this.state.sections[1].questionValues}
+              data={this.state.sections[1].questionValues !== null ? this.state.sections[1].questionValues : [0,0,0,0,0,0,0] }
               sections={this.state.sections}
               width="100%"
               height="auto"

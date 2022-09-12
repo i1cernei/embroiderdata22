@@ -15,12 +15,12 @@ class Stitch {
 
     const _this = this;
 
-    switch (this.type) {
+    switch (_this.type) {
       case "x":
-        drawX(this);
+        drawX(_this);
         break;
       default:
-        drawX(this);
+        drawX(_this);
         break;
     }
 

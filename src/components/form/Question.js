@@ -32,7 +32,7 @@ class Question extends Component {
         totalValue += Number(job.value);
       })
 
-      this.props.changeJob(totalValue, index )
+      this.props.changeJob(totalValue, index, data )
 
       this.setState({ selectedJobs: data });
 

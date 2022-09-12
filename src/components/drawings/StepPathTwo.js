@@ -50,7 +50,7 @@ class StepPathTwo {
 
       this.path.add(this.walker);
 
-      const stitch = new Stitch(Math.sqrt(2 * (this.radius ** 2)) / 2 - this.radius / 6, this.walker, this.color, this.radius / 2, this.type, this.scope);
+      const stitch = new Stitch(Math.sqrt(2 * (this.radius ** 2)) / 2 - this.radius / 6, this.walker, this.color, this.radius / 2.2, this.type, this.scope);
       stitch.draw()
 
       // const circle = new Paper.Path.Circle(this.walker, 2);

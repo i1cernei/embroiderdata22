@@ -202,7 +202,7 @@ class PaperCanvas extends Component {
       };
 
       this.originMax = Math.max(...diamonds.steps);
-      this.radius = this.residenceMax > 15 || this.originMax > 10 ? 6 : 10;
+      this.radius = this.residenceMax > 15 || this.originMax > 10 ? 8 : 10;
       let colors = diamonds.colors || ['black'];
       let radius = this.radius;
 
@@ -333,7 +333,7 @@ class PaperCanvas extends Component {
           this.residenceData.percContinent
         ];
         this.residenceMax = Number(Math.max(...spreadable));
-        this.radius = this.residenceMax > 15 || this.originMax > 10 ? 6 : 10;
+        this.radius = this.residenceMax > 15 || this.originMax > 10 ? 8 : 10;
 
       const config = {
         radius: this.radius,
@@ -424,7 +424,7 @@ class PaperCanvas extends Component {
 
     this.drawHomeData = (origin) => {
       const colors = this.palettes[`${this.props.residence.cultural_group}`] || ['black', 'purple', 'red'];
-      this.radius = this.residenceMax > 15 || this.originMax > 10 ? 6 : 10;
+      this.radius = this.residenceMax > 15 || this.originMax > 10 ? 8 : 10;
       const measure = this.originMax - 7 + this.props.livingdata[4] * 2;
       const config = {
         radius: this.radius,
