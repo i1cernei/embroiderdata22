@@ -41,7 +41,7 @@ class Wrap extends Component {
 
       const currentSections = this.state.sections;
       const currentValues = this.state.sections[this.state.currentSection].questionValues;
-      currentValues[index] = value;
+      currentValues[index] = [value, jobs];
       console.log('Jobs: ', jobs);
       currentSections[this.state.currentSection].questionValues = currentValues;
 
@@ -259,7 +259,7 @@ componentWillMount() {
               className={'h-full w-full'}
               origin={this.state.origin}
               residence={this.state.residence}
-              data={this.state.sections[1].questionValues !== null ? this.state.sections[1].questionValues : [0,0,0,0,0,0,0] }
+              data={this.state.sections[1] !== undefined ? this.state.sections[1].questionValues : [0,0,0,0,0,0,0] }
               sections={this.state.sections}
               width="100%"
               height="auto"

@@ -275,101 +275,120 @@ class WorkCanvas extends Component {
 
     // }
 
-    this.drawSecondSymbol = (origin) => {
-      // const livingColors = this.palettes[`${this.props.residence.cultural_group}`] || ['black', 'purple', 'red'];
-      const originColors = this.palettes[`${this.props.origin.cultural_group}`] || ['black', 'purple', 'red'];
-      const elements = [];
+    // this.drawSecondSymbol = (origin) => {
+    //   // const livingColors = this.palettes[`${this.props.residence.cultural_group}`] || ['black', 'purple', 'red'];
+    //   const originColors = this.palettes[`${this.props.origin.cultural_group}`] || ['black', 'purple', 'red'];
+    //   const elements = [];
 
 
-      const bigRightV = new vLeft(origin, {
-        radius: this.radius,
-        steps: mapRange(this.props.data[2], 7, 70, 5, 30),
-        colors:[originColors[1], originColors[2]],
-        offset: {
-                x: -15 * this.radius,
-                y: 17 * this.radius
-              },
-      })
+    //   const bigRightV = new vLeft(origin, {
+    //     radius: this.radius,
+    //     steps: mapRange(this.props.data[2], 7, 70, 5, 30),
+    //     colors:[originColors[1], originColors[2]],
+    //     offset: {
+    //             x: -15 * this.radius,
+    //             y: 17 * this.radius
+    //           },
+    //   })
 
-      // const bigRightV2 = new vLeft(origin, {
-      //   radius: this.radius,
-      //   steps: mapRange(this.props.data[2], 0, 100, 20, 50),
-      //   colors:[originColors[1], originColors[2]],
-      //   offset: {
-      //           x: -14 * this.radius,
-      //           y: 17 * this.radius
-      //         },
-      // })
+    //   // const bigRightV2 = new vLeft(origin, {
+    //   //   radius: this.radius,
+    //   //   steps: mapRange(this.props.data[2], 0, 100, 20, 50),
+    //   //   colors:[originColors[1], originColors[2]],
+    //   //   offset: {
+    //   //           x: -14 * this.radius,
+    //   //           y: 17 * this.radius
+    //   //         },
+    //   // })
 
-      const bigLeftV = new vRight(origin, {
-        radius: this.radius,
-        steps: mapRange(this.props.data[2], 7, 70, 5, 30),
-        colors:[originColors[1], originColors[2]],
-        offset: {
-                x: 15 * this.radius,
-                y: 17 * this.radius
-              },
-      })
+    //   const bigLeftV = new vRight(origin, {
+    //     radius: this.radius,
+    //     steps: mapRange(this.props.data[2], 7, 70, 5, 30),
+    //     colors:[originColors[1], originColors[2]],
+    //     offset: {
+    //             x: 15 * this.radius,
+    //             y: 17 * this.radius
+    //           },
+    //   })
 
-      const smallTopV = new vDown(origin, {
-        radius: this.radius,
-        steps: 20,
-        colors:[originColors[1], originColors[2]],
-        offset: {
-                x: 0,
-                y: 10 * this.radius
-              },
-      })
+    //   const smallTopV = new vDown(origin, {
+    //     radius: this.radius,
+    //     steps: 20,
+    //     colors:[originColors[1], originColors[2]],
+    //     offset: {
+    //             x: 0,
+    //             y: 10 * this.radius
+    //           },
+    //   })
 
-      const smallBottomV = new vUp(origin, {
-        radius: this.radius,
-        steps: 20,
-        colors:[originColors[1], originColors[2]],
-        offset: {
-                x: 0,
-                y: 24 * this.radius
-              },
-      })
+    //   const smallBottomV = new vUp(origin, {
+    //     radius: this.radius,
+    //     steps: 20,
+    //     colors:[originColors[1], originColors[2]],
+    //     offset: {
+    //             x: 0,
+    //             y: 24 * this.radius
+    //           },
+    //   })
 
-      const smallLeftV = new vRight(origin, {
-        radius: this.radius,
-        steps: 22,
-        colors:[originColors[0], originColors[2]],
-        offset: {
-                x: -5 * this.radius,
-                y: 17 * this.radius
-              },
-      })
+    //   const smallLeftV = new vRight(origin, {
+    //     radius: this.radius,
+    //     steps: 22,
+    //     colors:[originColors[0], originColors[2]],
+    //     offset: {
+    //             x: -5 * this.radius,
+    //             y: 17 * this.radius
+    //           },
+    //   })
 
-      const smallRightV = new vLeft(origin, {
-        radius: this.radius,
-        steps: 22,
-        colors:[originColors[0], originColors[2]],
-        offset: {
-                x: 5 * this.radius,
-                y: 17 * this.radius
-              },
-      })
+    //   const smallRightV = new vLeft(origin, {
+    //     radius: this.radius,
+    //     steps: 22,
+    //     colors:[originColors[0], originColors[2]],
+    //     offset: {
+    //             x: 5 * this.radius,
+    //             y: 17 * this.radius
+    //           },
+    //   })
 
 
-      elements.push(bigLeftV, bigRightV, smallTopV, smallBottomV, smallLeftV, smallRightV);
+    //   elements.push(bigLeftV, bigRightV, smallTopV, smallBottomV, smallLeftV, smallRightV);
 
-      elements.map(el => {
-        el.init().draw();
-        return null;
-      })
-    }
+    //   elements.map(el => {
+    //     el.init().draw();
+    //     return null;
+    //   })
+    // }
 
     this.drawDecorations = (origin) => {
+
+      // for (let i = 0; i < this.props.data[2][1].length; i++) {
+      //   const circle = new CircleDiamond(
+      //     origin,
+      //     {
+      //       baseRadius: 10 * this.radius,
+      //       radius: this.radius,
+      //       skipOne: true,
+      //       outer: true,
+      //       inner: true,
+      //       oddOnly: true,
+      //       startRadians: 0,
+      //       radianLimit: 2 * Math.PI,
+      //     }, { x: 0, y: 0}
+      //   ).init();
+
+      //   circle.draw()
+      // }
+
       const circle = new CircleDiamond(
         origin,
         {
-          baseRadius: 10 * this.radius,
+          baseRadius: (4 + this.props.data[4]) * this.radius,
           radius: this.radius,
           skipOne: true,
-          outer: true,
+          outer: this.props.data[2][0] < 20,
           inner: true,
-          oddOnly: true,
+          oddOnly: this.props.data[2][0] > 20,
           startRadians: 0,
           radianLimit: 2 * Math.PI,
         }, { x: 0, y: 0}
@@ -378,7 +397,7 @@ class WorkCanvas extends Component {
       const circle2 = new CircleDiamond(
         origin,
         {
-          baseRadius: 14 * this.radius,
+          baseRadius: this.props.data[3] * 0.8 * this.radius,
           radius: this.radius,
           skipOne: false,
           inner: true,
@@ -412,7 +431,7 @@ class WorkCanvas extends Component {
       const circle = new CircleDiamond(
         origin,
         {
-          baseRadius: 10 * this.radius,
+          baseRadius:18 * this.radius,
           radius: this.radius,
           skipOne: false,
           outer: false,
@@ -425,35 +444,55 @@ class WorkCanvas extends Component {
 
       circle.draw();
 
+      const innerCircle = new CircleDiamond(
+        origin,
+        {
+          baseRadius:this.props.data[2][0] / 4 * this.radius,
+          radius: this.radius,
+          skipOne: false,
+          outer: false,
+          inner: false,
+          oddOnly: true,
+          startRadians: 0,
+          radianLimit: 2 * Math.PI,
+        }, { x: 0, y: 0}
+      ).init();
+
+      innerCircle.draw();
+
       let count = 0;
-      for (let i = 0; i <= 2 * Math.PI; i += Math.PI * 0.25) {
-        // const posX = this.origin.x + Math.cos(i) * this.config.baseRadius;
-        // const posY = this.origin.y + Math.sin(i) * this.config.baseRadius;
+      if (this.props.data[2][1] !== undefined)
+      {
+        const divider = this.props.data[2][1].length > 0 ? Math.PI / this.props.data[2][1].length / 2 : Math.PI * 0.25;
+        for (let i = 0; i <= 2 * Math.PI; i += divider) {
+          // const posX = this.origin.x + Math.cos(i) * this.config.baseRadius;
+          // const posY = this.origin.y + Math.sin(i) * this.config.baseRadius;
 
 
-        const startRadius = 10 * this.radius;
-        const xPos = startRadius * Math.cos(i) + origin.x;
-        const yPos = startRadius * Math.sin(i) + origin.y;
+          const startRadius = this.props.data[2][0] / this.props.data[2][1].length / 2 * this.radius;
+          const xPos = startRadius * Math.cos(i) + origin.x;
+          const yPos = startRadius * Math.sin(i) + origin.y;
 
-        const starOrigin = new Paper.Point(xPos, yPos);
-        const size = (count % 2 === 0) ? 5 : 2;
+          const starOrigin = new Paper.Point(xPos, yPos);
+          const size = (count % 2 === 0) ? 5 : 2;
 
-        const starCircle = new CircleDiamond(
-          starOrigin,
-          {
-            baseRadius: size * this.radius,
-            radius: this.radius,
-            skipOne: false,
-            outer: false,
-            inner: false,
-            oddOnly: false,
-            startRadians: 0,
-            radianLimit: 2 * Math.PI,
-          }, { x: 0, y: 0 }
-        ).init();
+          const starCircle = new CircleDiamond(
+            starOrigin,
+            {
+              baseRadius: size * this.radius,
+              radius: this.radius,
+              skipOne: false,
+              outer: false,
+              inner: false,
+              oddOnly: false,
+              startRadians: 0,
+              radianLimit: 2 * Math.PI,
+            }, { x: 0, y: 0 }
+          ).init();
 
-        starCircle.draw();
-        count++;
+          starCircle.draw();
+          count++;
+        }
       }
     }
 
@@ -495,12 +534,12 @@ class WorkCanvas extends Component {
 
     this.drawBorderUp = (origin, index) => {
 
-      const size = (index % 2 !== 0) ? 17 : 18 ;
+      const size = (index % 2 !== 0) ? 18 : 18 ;
 
         const starCircle = new CircleDiamond(
           origin,
           {
-            baseRadius: size * this.radius,
+            baseRadius: (size + 1 + this.props.data[3] / 6) * this.radius,
             radius: this.radius,
             skipOne: false,
             outer: false,
@@ -514,7 +553,7 @@ class WorkCanvas extends Component {
         const starCircle2 = new CircleDiamond(
           origin,
           {
-            baseRadius: (size - 5) * this.radius,
+            baseRadius: (size/3 + this.props.data[0]/3) * this.radius,
             radius: this.radius,
             skipOne: true,
             outer: false,
@@ -528,14 +567,14 @@ class WorkCanvas extends Component {
         const starCircle3 = new CircleDiamond(
           origin,
           {
-            baseRadius: (size - 10) * this.radius,
+            baseRadius: (size/4 + this.props.data[1]/3) * this.radius,
             radius: this.radius,
             skipOne: true,
             outer:true,
             inner: true,
             oddOnly: false,
             startRadians: 0,
-            radianLimit:  Math.PI,
+            radianLimit: Math.PI,
           }, { x: 0, y: 0 }
         ).init();
 
@@ -566,17 +605,17 @@ class WorkCanvas extends Component {
         // this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
         // this.drawFirstSymbol(new Paper.Point(this.radius + i * this.radius * 68, 10 * this.radius));
         // this.drawSecondSymbol(new Paper.Point(this.radius * 55 + i * this.radius * 68, 10 * this.radius));
-        this.drawDecorations(new Paper.Point(55 * this.radius + i * this.radius * 68, 27 * this.radius));
-        this.drawStarSymbol(new Paper.Point(20 * this.radius + i * this.radius * 68, 27 * this.radius));
+        this.drawDecorations(new Paper.Point(54 * this.radius + i * this.radius * 72, 27 * this.radius));
+        this.drawStarSymbol(new Paper.Point(18 * this.radius + i * this.radius * 72, 27 * this.radius));
         // this.drawBorder(new Paper.Point( this.radius + i * this.radius * 35, 54 * this.radius));
       }
 
       for (let i = 0; i < 5; i++) {
 
-        const posX = (i  % 2 !== 0) ? 17 : 18 ;
+        const posX = (i  % 2 !== 0) ? 18 : 18 ;
 
-        this.drawBorderDown(new Paper.Point(this.radius + i * this.radius * posX * 2, 54 * this.radius), i);
-        this.drawBorderUp(new Paper.Point( this.radius + i * this.radius * posX * 2, this.radius), i);
+        this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, 51 * this.radius), i);
+        this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2, this.radius * 2), i);
 
       }
 
@@ -597,8 +636,18 @@ class WorkCanvas extends Component {
           // this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
           // this.drawFirstSymbol(new Paper.Point(this.radius + i * this.radius * 68, 10 * this.radius));
           // this.drawSecondSymbol(new Paper.Point(this.radius * 55 + i * this.radius * 68, 10 * this.radius));
-          this.drawDecorations(new Paper.Point(55 * this.radius + i * this.radius * 68, 27 * this.radius));
-          this.drawStarSymbol(new Paper.Point(20 * this.radius + i * this.radius * 68, 27 * this.radius));
+          this.drawDecorations(new Paper.Point(54 * this.radius + i * this.radius * 72, 27 * this.radius));
+          this.drawStarSymbol(new Paper.Point(18 * this.radius + i * this.radius * 72, 27 * this.radius));
+          // this.drawBorder(new Paper.Point( this.radius + i * this.radius * 35, 54 * this.radius));
+        }
+
+        for (let i = 0; i < 5; i++) {
+
+          const posX = (i  % 2 !== 0) ? 18 : 18 ;
+
+          this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, 51 * this.radius), i);
+          this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2, this.radius * 2), i);
+
         }
 
       }
