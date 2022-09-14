@@ -44,7 +44,7 @@ class WorkCanvas extends Component {
 
     this.workCanvasScope = new Paper.PaperScope();
 
-    this.radius = 5;
+    this.radius = 5.5;
     this.palettes = {
       northern: [
         '#ffca00',
@@ -139,6 +139,9 @@ class WorkCanvas extends Component {
       ]
 
     }
+
+    this.originColors = this.props.colors !== undefined ? this.props.colors[`${this.props.origin.cultural_group}`] : ['#b5b3a7','#ce5f51','#bd6964','#fafafa','#1a1c1a'];
+    this.residenceColors = this.props.colors !== undefined ? this.props.colors[`${this.props.residence.cultural_group}`] : ['#203e5f','#ffcc00','#eaeaea', '#fee5b1', '#1a2634' ];
 
     this.workRef = React.createRef();
     this.newCanvas = {};
@@ -391,6 +394,7 @@ class WorkCanvas extends Component {
           oddOnly: this.props.data[2][0] > 20,
           startRadians: 0,
           radianLimit: 2 * Math.PI,
+          color: this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7',
         }, { x: 0, y: 0}
       ).init();
 
@@ -404,7 +408,8 @@ class WorkCanvas extends Component {
           outer: false,
           oddOnly: false,
           startRadians: 0,
-          radianLimit: 2 * Math.PI
+          radianLimit: 2 * Math.PI,
+          color: this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7'
         }, { x: 0, y: 0}
       ).init();
 
@@ -419,6 +424,7 @@ class WorkCanvas extends Component {
           oddOnly: false,
           startRadians: 0,
           radianLimit: 2 * Math.PI,
+          color: this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7'
         }, { x: 0, y: 0}
       ).init();
 
@@ -439,6 +445,7 @@ class WorkCanvas extends Component {
           oddOnly: true,
           startRadians: 0,
           radianLimit: 2 * Math.PI,
+          color: this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7',
         }, { x: 0, y: 0}
       ).init();
 
@@ -455,6 +462,7 @@ class WorkCanvas extends Component {
           oddOnly: true,
           startRadians: 0,
           radianLimit: 2 * Math.PI,
+          color: this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7'
         }, { x: 0, y: 0}
       ).init();
 
@@ -475,6 +483,11 @@ class WorkCanvas extends Component {
 
           const starOrigin = new Paper.Point(xPos, yPos);
           const size = (count % 2 === 0) ? 5 : 2;
+          let color = this.originColors !== undefined ? this.originColors[2] : '#b5b3a7';
+
+          if (count % 2 === 0) {
+            color = this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7'
+          }
 
           const starCircle = new CircleDiamond(
             starOrigin,
@@ -487,6 +500,7 @@ class WorkCanvas extends Component {
               oddOnly: false,
               startRadians: 0,
               radianLimit: 2 * Math.PI,
+              color,
             }, { x: 0, y: 0 }
           ).init();
 
@@ -511,6 +525,7 @@ class WorkCanvas extends Component {
             oddOnly: false,
             startRadians: Math.PI,
             radianLimit: 2 * Math.PI,
+            color: this.originColors !== undefined ? this.originColors[3] : '#b5b3a7',
           }, { x: 0, y: 0 }
         ).init();
 
@@ -524,7 +539,8 @@ class WorkCanvas extends Component {
             inner: false,
             oddOnly: false,
             startRadians: Math.PI,
-            radianLimit:  2 * Math.PI,
+            radianLimit: 2 * Math.PI,
+            color: this.originColors !== undefined ? this.originColors[1] : '#b5b3a7',
           }, { x: 0, y: 0 }
         ).init();
 
@@ -539,6 +555,7 @@ class WorkCanvas extends Component {
             oddOnly: false,
             startRadians:  Math.PI,
             radianLimit: 2 * Math.PI,
+            color: this.originColors !== undefined ? this.originColors[0] : '#b5b3a7',
           }, { x: 0, y: 0 }
         ).init();
 
@@ -562,6 +579,7 @@ class WorkCanvas extends Component {
             oddOnly: false,
             startRadians: 0,
             radianLimit: Math.PI,
+            color: this.originColors !== undefined ? this.originColors[3] : '#b5b3a7',
           }, { x: 0, y: 0 }
         ).init();
 
@@ -575,7 +593,8 @@ class WorkCanvas extends Component {
             inner: false,
             oddOnly: false,
             startRadians: 0,
-            radianLimit:  Math.PI,
+            radianLimit: Math.PI,
+            color: this.originColors !== undefined ? this.originColors[1] : '#b5b3a7',
           }, { x: 0, y: 0 }
         ).init();
 
@@ -590,6 +609,7 @@ class WorkCanvas extends Component {
             oddOnly: false,
             startRadians: 0,
             radianLimit: Math.PI,
+            color: this.originColors !== undefined ? this.originColors[0] : '#b5b3a7',
           }, { x: 0, y: 0 }
         ).init();
 
@@ -643,6 +663,8 @@ class WorkCanvas extends Component {
   }
 
   componentDidUpdate() {
+    this.originColors = this.props.colors[`${this.props.origin.cultural_group}`];
+    this.residenceColors = this.props.colors[`${this.props.residence.cultural_group}`];
     this.workCanvasScope.activate();
     this.workCanvasScope.project.activeLayer.removeChildren();
       if (Paper !== undefined) {

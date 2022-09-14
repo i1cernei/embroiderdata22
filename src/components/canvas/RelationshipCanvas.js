@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import Paper from 'paper';
 
-import StepPathTwo from '../drawings/StepPathTwo';
-import { StepDiamond } from '../drawings/StepDiamond';
+import { CircleDiamond } from '../drawings/CircleDiamond';
+import StitchPath from '../drawings/StitchPath';
 
-import vUp from '../drawings/vUp';
-import vDown from '../drawings/vDown';
 
 // import vUp from '../drawings/vUp';
 
@@ -29,7 +27,7 @@ function mapRange (_in, in_min, in_max, out_min, out_max) {
 }
 
 
-class BannerCanvas extends Component {
+class WorkCanvas extends Component {
   constructor(props) {
     super(props);
 
@@ -38,8 +36,9 @@ class BannerCanvas extends Component {
 
     }
 
-    this.canvasScope = new Paper.PaperScope();
+    this.relationshipCanvasScope = new Paper.PaperScope();
 
+    this.radius = 4;
     this.palettes = {
       northern: [
         '#ffca00',
@@ -135,37 +134,12 @@ class BannerCanvas extends Component {
 
     }
 
-    this.originCountryDiamonds = [];
-    this.newRef = React.createRef();
+    this.originColors = this.props.colors !== undefined ? this.props.colors[`${this.props.origin.cultural_group}`] : ['#b5b3a7','#ce5f51','#bd6964','#fafafa','#1a1c1a'];
+    this.residenceColors = this.props.colors !== undefined ? this.props.colors[`${this.props.residence.cultural_group}`] : ['#203e5f','#ffcc00','#eaeaea', '#fee5b1', '#1a2634' ];
+
+    this.workRef = React.createRef();
     this.newCanvas = {};
-    this.popSymbol = Math.round(mapRange(this.props.origin.population / 1000000, 0, 210, 7, 25));
-    this.radius = 10;
-    this.oMinMap = 0;
 
-    this.originData = {
-      popSymbol: Math.round(mapRange(20, 0, 210, 7, 16)),
-      minoritiesPerc: Math.round(mapRange(14, 0, 50, 3, 10)),
-      percContinent: Math.round(mapRange(0.1, 0, 34, 20000000 / 1000000 + 2, 15))
-    }
-
-
-    this.residenceData = {};
-    this.residenceData.popSymbol = Math.round(mapRange(this.props.residence.population / 1000000, 0, 210, 7, 25));
-    this.residenceData.minoritiesPerc = Math.round(mapRange(this.props.residence['minority_percent'], 0, 50, 3, 10));
-      this.residenceData.percContinent = Math.round(mapRange(this.props.residence.perc_continent_pop, 0, 34, this.residenceData.popSymbol + 2, 30));
-
-      const spreadable = [
-        this.residenceData.popSymbol,
-        this.residenceData.minoritiesPerc,
-        this.residenceData.percContinent
-      ];
-    this.residenceMax = Math.max(...spreadable);
-
-
-    this.originMax = Math.max([this.originData.popSymbol, this.originData.minoritiesPerc, this.originData.percContinent]);
-
-    // this.residenceMax = Math.max([this.residenceData.popSymbol, this.residenceData.minoritiesPerc, this.residenceData.percContinent]);
-    // console.log(this.originMax);
 
     this.export = () => {
       // const svg = Paper.project.activeLayer.exportSVG();
@@ -174,291 +148,465 @@ class BannerCanvas extends Component {
     }
 
 
-    this.drawOriginCountryData = (origin) => {
+    this.drawDecorations = (origin) => {
 
-      this.originCountryDiamonds = [];
+      const circle = new CircleDiamond(
+        origin,
+        {
+          baseRadius: (4 + this.props.data[4]) * this.radius,
+          radius: this.radius,
+          skipOne: true,
+          outer: this.props.data[2][0] < 20,
+          inner: true,
+          oddOnly: this.props.data[2][0] > 20,
+          startRadians: 0,
+          radianLimit: 2 * Math.PI,
+          color: this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7',
+        }, { x: 0, y: 0}
+      ).init();
 
-      const popmil = Number(this.props.origin.population) / 1000000;
-      this.originData.popSymbol = Math.round(mapRange(popmil, 0, 210, 7, 15));
-      this.originData.minoritiesPerc = mapRange(this.props.origin['minority_percent'], 0, 50, 3, 10);
-      this.originData.percContinent = Math.round(mapRange(this.props.origin.perc_continent_pop, 0, 34, this.originData.popSymbol + 2, 18));
+      const circle2 = new CircleDiamond(
+        origin,
+        {
+          baseRadius: this.props.data[3] * 0.8 * this.radius,
+          radius: this.radius,
+          skipOne: false,
+          inner: true,
+          outer: false,
+          oddOnly: false,
+          startRadians: 0,
+          radianLimit: 2 * Math.PI,
+          color: this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7'
+        }, { x: 0, y: 0}
+      ).init();
 
-      /* It's creating an object with the properties of radius, colors, and steps. */
-      const diamonds = {
-        radius: 12,
-        colors: this.palettes[`${this.props.origin.cultural_group}`],
-        steps: [
-          this.originData.popSymbol,
-          this.originData.minoritiesPerc,
-          this.originData.percContinent,
-          // Math.round(this.props.origin.minority_percent),
-        ]
-      };
+      const circle3 = new CircleDiamond(
+        origin,
+        {
+          baseRadius: 18 * this.radius,
+          radius: this.radius,
+          skipOne: true,
+          inner: true,
+          outer: true,
+          oddOnly: false,
+          startRadians: 0,
+          radianLimit: 2 * Math.PI,
+          color: this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7'
+        }, { x: 0, y: 0}
+      ).init();
 
-      this.originMax = Math.max(...diamonds.steps)
-      let colors = diamonds.colors || ['black'];
-      let radius = 10;
+      circle.draw();
+      circle2.draw();
+      circle3.draw();
+    }
 
-      // console.log(popmil);
-      diamonds.steps.map((diamond, index) => {
-        const originDiamonds = origin.clone();
+    this.drawStarSymbol = (origin) => {
+      const circle = new CircleDiamond(
+        origin,
+        {
+          baseRadius:18 * this.radius,
+          radius: this.radius,
+          skipOne: false,
+          outer: false,
+          inner: false,
+          oddOnly: true,
+          startRadians: 0,
+          radianLimit: 2 * Math.PI,
+          color: this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7',
+        }, { x: 0, y: 0}
+      ).init();
 
-        if (this.palettes[`${this.props.origin.cultural_group}`] !== undefined) {
-          colors = this.palettes[`${this.props.origin.cultural_group}`];
-        }
+      circle.draw();
 
+      const innerCircle = new CircleDiamond(
+        origin,
+        {
+          baseRadius:this.props.data[2][0] / 4 * this.radius,
+          radius: this.radius,
+          skipOne: false,
+          outer: false,
+          inner: false,
+          oddOnly: true,
+          startRadians: 0,
+          radianLimit: 2 * Math.PI,
+          color: this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7'
+        }, { x: 0, y: 0}
+      ).init();
 
-        const stepDiamond = new StepDiamond(
-          originDiamonds,
-          {
-            radius,
-            steps: diamond,
-            colors: [colors[index]]
-          },
-          {
-            x: radius * (this.originMax - diamond) / 2,
-            y: radius * this.originMax / 2
-          }, this.canvasScope).init();
-        stepDiamond.draw();
-        this.originCountryDiamonds.push(stepDiamond);
-        // console.log(stepDiamond.paths);
-      })
+      innerCircle.draw();
 
-      // console.log(this.originCountryDiamonds[2].paths.topL);
-      const length = 3;
-      let gdpCalc = Math.abs(mapRange(this.props.origin.gdp, 18000000, 1000000, 0.5, 0.3))
-
-      if (this.props.origin.gdp < 100000) {
-        gdpCalc = Math.abs(mapRange(this.props.origin.gdp, 10000, 100000, 0.4, 0.7))
-      } else if (this.props.origin.gdp < 700000) {
-        gdpCalc = Math.abs(mapRange(this.props.origin.gdp, 100000, 700000, 0.7, 0.4))
-      }
-
-      /* It's drawing the lines on the diamonds according to GDP. */
-      for (let i = 0; i < this.originCountryDiamonds[2].paths.topL.length; i += this.originCountryDiamonds[2].paths.topL.length * gdpCalc) {
-
-
-        const center = this.originCountryDiamonds[2].paths.topL.getPointAt(i);
-
-        const path = new StepPathTwo(center, length, radius, { x: -1, y: -1 }, diamonds.colors, 'x', this.canvasScope);
-        path.init().draw();
-
-      }
-
-      for (let i = 0; i < this.originCountryDiamonds[2].paths.topR.length; i += this.originCountryDiamonds[2].paths.topR.length * gdpCalc) {
-
-
-        const center = this.originCountryDiamonds[2].paths.topR.getPointAt(i);
-
-        const path = new StepPathTwo(center, length, radius, { x: 1, y: -1 }, diamonds.colors, 'x', this.canvasScope);
-        path.init().draw();
-
-      }
-
-      for (let i = 0; i < this.originCountryDiamonds[2].paths.bottomR.length; i += this.originCountryDiamonds[2].paths.bottomR.length * gdpCalc) {
-
-
-        const center = this.originCountryDiamonds[2].paths.bottomR.getPointAt(i);
-
-        const path = new StepPathTwo(center, length, radius, { x: 1, y: 1 }, diamonds.colors, 'x', this.canvasScope);
-        path.init().draw();
-
-      }
-
-      for (let i = 0; i < this.originCountryDiamonds[2].paths.bottomL.length; i += this.originCountryDiamonds[2].paths.bottomL.length * gdpCalc) {
-
-
-        const center = this.originCountryDiamonds[2].paths.bottomL.getPointAt(i);
-
-        const path = new StepPathTwo(center, length, radius, { x: -1, y: 1 }, diamonds.colors, 'x', this.canvasScope);
-        path.init().draw();
-
-      }
+      let count = 0;
+      if (this.props.data[2][1] !== undefined)
+      {
+        const divider = this.props.data[2][1].length > 0 ? Math.PI / this.props.data[2][1].length / 2 : Math.PI * 0.25;
+        for (let i = 0; i <= 2 * Math.PI; i += divider) {
+          // const posX = this.origin.x + Math.cos(i) * this.config.baseRadius;
+          // const posY = this.origin.y + Math.sin(i) * this.config.baseRadius;
 
 
-      // Encode minorities number in upper and lower triangles
+          const startRadius = this.props.data[2][0] / this.props.data[2][1].length / 2 * this.radius;
+          const xPos = startRadius * Math.cos(i) + origin.x;
+          const yPos = startRadius * Math.sin(i) + origin.y;
 
-      const minMap = Math.round(mapRange(this.props.origin.minorities, 1, 20, 1, 7));
-      this.oMinMap = minMap;
+          const starOrigin = new Paper.Point(xPos, yPos);
+          const size = (count % 2 === 0) ? 5 : 2;
+          let color = this.originColors !== undefined ? this.originColors[2] : '#b5b3a7';
 
-      for (let i = 0; i < minMap; i++) {
-        const center = new Paper.Point(origin.x + (this.originMax * radius / 2) - i / 2 * radius - radius / 2, origin.y + i * radius + this.originMax * radius);
-
-        const path = new StepPathTwo(
-          center,
-          i,
-          radius,
-          { x: 1, y: 0 },
-          [diamonds.colors[i], diamonds.colors[1]],
-          'x',
-          this.canvasScope
-        ).init().draw();
-
-      }
-
-
-      for (let i = minMap; i > 0; i--) {
-        const center = new Paper.Point(origin.x + (this.originMax * radius / 2) - i / 2 * radius - radius / 2, origin.y - i * radius);
-
-        const path = new StepPathTwo(
-          center,
-          i,
-          radius,
-          { x: 1, y: 0 },
-          [diamonds.colors[i], diamonds.colors[1]],
-          'x',
-          this.canvasScope
-
-        ).init().draw();
-
-      }
-
-    };
-
-    this.drawResidenceCountryData = (origin) => {
-      if (this.props.residence !== '') {
-        this.residenceCountryX = [];
-
-      this.residenceData.popSymbol = Math.round(mapRange(this.props.residence.population / 1000000, 0, 210, 7, 25));
-      this.residenceData.minoritiesPerc = Math.round(mapRange(this.props.residence['minority_percent'], 0, 50, 3, 10));
-        this.residenceData.percContinent = Math.round(mapRange(this.props.residence.perc_continent_pop, 0, 34, this.residenceData.popSymbol + 2, 30));
-
-        const spreadable = [
-          this.residenceData.popSymbol,
-          this.residenceData.minoritiesPerc,
-          this.residenceData.percContinent
-        ];
-      this.residenceMax = Number(Math.max(...spreadable));
-
-      const config = {
-        radius: this.radius,
-        steps: this.residenceMax,
-        colors: this.palettes[`${this.props.residence.cultural_group}`],
-        offset: {
-          x:  this.originMax * this.radius - this.radius + this.originMax * this.radius - this.originMax * this.radius * 0.5  + this.radius ,
-          y: 0,
+          if (count % 2 === 0) {
+            color = this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7'
           }
-      }
 
-        const _vUp = new vUp(
-          origin,
-          config).init();
+          const starCircle = new CircleDiamond(
+            starOrigin,
+            {
+              baseRadius: size * this.radius,
+              radius: this.radius,
+              skipOne: false,
+              outer: false,
+              inner: false,
+              oddOnly: false,
+              startRadians: 0,
+              radianLimit: 2 * Math.PI,
+              color,
+            }, { x: 0, y: 0 }
+          ).init();
 
-        _vUp.draw();
-
-
-        const _vDown = new vDown(
-          origin,
-          config).init();
-
-        _vDown.draw();
-
-        const length = 3;
-        let gdpCalc = Math.abs(mapRange(this.props.residence.gdp, 18000000, 1000000, 0.5, 0.15));
-        const gdpColor = [config.colors[3]];
-
-        if (this.props.residence.gdp < 100000) {
-          gdpCalc = Math.abs(mapRange(this.props.residence.gdp, 10000, 100000, 0.4, 0.7))
-        } else if (this.props.residence.gdp < 700000) {
-          gdpCalc = Math.abs(mapRange(this.props.residence.gdp, 100000, 700000, 0.7, 0.4))
+          starCircle.draw();
+          count++;
         }
-
-        for (let i = 0; i < _vUp.paths.left.length; i += _vUp.paths.left.length * gdpCalc) {
-
-          const center = _vUp.paths.left.getPointAt(i);
-
-          const pathOut = new StepPathTwo(center, length, this.radius, { x: -1, y: 1 }, gdpColor, 'x');
-          // const pathIn = new StepPathTwo(center, length, this.radius, { x: 1, y: -1 }, ['black'], 'x');
-          pathOut.init().draw();
-          // pathIn.init().draw();
-
-        }
-
-        for (let i = 0; i < _vUp.paths.right.length; i += _vUp.paths.right.length * gdpCalc) {
-
-
-          const center = _vUp.paths.right.getPointAt(i);
-
-          // const pathOut = new StepPathTwo(center, length, this.radius, { x: -1, y: -1 }, ['black'], 'x');
-          const pathIn = new StepPathTwo(center, length, this.radius, { x: 1, y: 1 }, gdpColor, 'x');
-          // pathOut.init().draw();
-          pathIn.init().draw();
-
-        }
-
-        for (let i = 0; i < _vDown.paths.left.length; i += _vDown.paths.left.length * gdpCalc) {
-
-          const center = _vDown.paths.left.getPointAt(i);
-
-          // const pathOut = new StepPathTwo(center, length, this.radius, { x: -1, y: 1 }, ['black'], 'x');
-          const pathIn = new StepPathTwo(center, length, this.radius, { x: -1, y: -1 }, gdpColor, 'x');
-          // pathOut.init().draw();
-          pathIn.init().draw();
-
-        }
-
-        for (let i = 0; i < _vDown.paths.right.length; i += _vDown.paths.right.length * gdpCalc) {
-
-          const center = _vDown.paths.right.getPointAt(i);
-
-          // const pathOut = new StepPathTwo(center, length, this.radius, { x: -1, y: 1 }, ['black'], 'x');
-          const pathIn = new StepPathTwo(center, length, this.radius, { x: 1, y: -1 }, gdpColor, 'x');
-          // pathOut.init().draw();
-          pathIn.init().draw();
-
-        }
-
       }
     }
+
+    this.drawBorderDown = (origin, index) => {
+
+      const size = (index % 2 !== 0) ? 18 : 18 ;
+
+        const starCircle = new CircleDiamond(
+          origin,
+          {
+            baseRadius: (size + 1 + this.props.data[3] / 6) * this.radius,
+            radius: this.radius,
+            skipOne: false,
+            outer: false,
+            inner: false,
+            oddOnly: false,
+            startRadians: Math.PI,
+            radianLimit: 2 * Math.PI,
+            color: this.originColors !== undefined ? this.originColors[3] : '#b5b3a7',
+          }, { x: 0, y: 0 }
+        ).init();
+
+        const starCircle2 = new CircleDiamond(
+          origin,
+          {
+            baseRadius: (size/3 + this.props.data[0]/3) * this.radius,
+            radius: this.radius,
+            skipOne: true,
+            outer: false,
+            inner: false,
+            oddOnly: false,
+            startRadians: Math.PI,
+            radianLimit: 2 * Math.PI,
+            color: this.originColors !== undefined ? this.originColors[1] : '#b5b3a7',
+          }, { x: 0, y: 0 }
+        ).init();
+
+        const starCircle3 = new CircleDiamond(
+          origin,
+          {
+            baseRadius: (size/4 + this.props.data[1]/3) * this.radius,
+            radius: this.radius,
+            skipOne: true,
+            outer:true,
+            inner: true,
+            oddOnly: false,
+            startRadians:  Math.PI,
+            radianLimit: 2 * Math.PI,
+            color: this.originColors !== undefined ? this.originColors[0] : '#b5b3a7',
+          }, { x: 0, y: 0 }
+        ).init();
+
+      starCircle.draw();
+      starCircle2.draw();
+      starCircle3.draw();
+    }
+
+    this.drawBorderUp = (origin, index) => {
+
+      const size = (index % 2 !== 0) ? 18 : 18 ;
+
+        const starCircle = new CircleDiamond(
+          origin,
+          {
+            baseRadius: (size + 1 + this.props.data[3] / 6) * this.radius,
+            radius: this.radius,
+            skipOne: false,
+            outer: false,
+            inner: false,
+            oddOnly: false,
+            startRadians: 0,
+            radianLimit: Math.PI,
+            color: this.originColors !== undefined ? this.originColors[3] : '#b5b3a7',
+          }, { x: 0, y: 0 }
+        ).init();
+
+        const starCircle2 = new CircleDiamond(
+          origin,
+          {
+            baseRadius: (size/3 + this.props.data[0]/3) * this.radius,
+            radius: this.radius,
+            skipOne: true,
+            outer: false,
+            inner: false,
+            oddOnly: false,
+            startRadians: 0,
+            radianLimit: Math.PI,
+            color: this.originColors !== undefined ? this.originColors[1] : '#b5b3a7',
+          }, { x: 0, y: 0 }
+        ).init();
+
+        const starCircle3 = new CircleDiamond(
+          origin,
+          {
+            baseRadius: (size/4 + this.props.data[1]/3) * this.radius,
+            radius: this.radius,
+            skipOne: true,
+            outer:true,
+            inner: true,
+            oddOnly: false,
+            startRadians: 0,
+            radianLimit: Math.PI,
+            color: this.originColors !== undefined ? this.originColors[0] : '#b5b3a7',
+          }, { x: 0, y: 0 }
+        ).init();
+
+      starCircle.draw();
+      starCircle2.draw();
+      starCircle3.draw();
+    }
+
+    this.drawTree = (origin, index = 0) => {
+      const trunk = new StitchPath(8, this.relationshipCanvasScope, origin, new Paper.Point(origin.x + this.radius * 200, origin.y), 'x');
+      trunk.draw()
+
+      let count = 0;
+      for (let i = 0; i < trunk.path.length - trunk.path.length / 10; i += trunk.path.length / 10) {
+        const _pathPoint = trunk.path.getPointAt(i);
+        let posX, posY;
+
+        const length = 20 * this.radius;
+
+        posX = _pathPoint.x + Math.cos(Math.PI / 3) * length;
+        posY = _pathPoint.y + Math.sin(Math.PI / 3) * length;
+
+        if (count % 2 !== 0) {
+          posX = _pathPoint.x + Math.cos(-Math.PI / 3) *  length;
+          posY = _pathPoint.y + Math.sin(-Math.PI / 3) * length;
+        }
+
+        const _to = new Paper.Point(posX, posY);
+
+        const branch = new StitchPath(8, this.relationshipCanvasScope, _pathPoint, _to, 'x' , this.originColors !== undefined ? this.originColors[0] : '#b5b3a7')
+        branch.draw();
+
+        const _endPoint = branch.path.getPointAt(branch.path.length);
+        const _endPointTo = new Paper.Point(_endPoint.x + length / 2, _endPoint.y);
+
+        const endBranch = new StitchPath(8, this.relationshipCanvasScope, _endPoint, _endPointTo, 'x', this.originColors !== undefined ? this.originColors[0] : '#b5b3a7');
+        endBranch.draw();
+
+        const endFlower = new CircleDiamond(endBranch.path.getPointAt(endBranch.path.length), {
+          baseRadius: 6 * (this.radius),
+          radius: this.radius ,
+          skipOne: true,
+          inner: true,
+          outer: true,
+          oddOnly: false,
+          startRadians: 0,
+          radianLimit: 2 * Math.PI,
+          color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
+        },
+          {
+            x: this.radius * 4,
+            y: 0,
+          }, this.relationshipCanvasScope).init();
+
+        endFlower.draw();
+
+        count++;
+      }
+
+      let miniCount = 0
+      for (let i = 0; i < trunk.path.length - trunk.path.length / 20; i += trunk.path.length / 30) {
+        const _pathPoint = trunk.path.getPointAt(i);
+        let posX, posY;
+
+        const length = 10 * this.radius;
+
+        posX = _pathPoint.x + Math.cos(Math.PI / 3) * length;
+        posY = _pathPoint.y + Math.sin(Math.PI / 3) * length;
+
+        if (miniCount % 2 !== 0) {
+          posX = _pathPoint.x + Math.cos(-Math.PI / 3) * length;
+          posY = _pathPoint.y + Math.sin(-Math.PI / 3) * length;
+        }
+
+        const _to = new Paper.Point(posX, posY);
+
+        const branch = new StitchPath(8, this.relationshipCanvasScope, _pathPoint, _to, 'x', this.originColors !== undefined ? this.originColors[0] : '#b5b3a7')
+        branch.draw();
+
+        const _endPoint = branch.path.getPointAt(branch.path.length);
+        const _endPointTo = new Paper.Point(_endPoint.x - length / 2, _endPoint.y);
+
+        const endBranch = new StitchPath(8, this.relationshipCanvasScope, _endPoint, _endPointTo, 'x', this.originColors !== undefined ? this.originColors[2] : '#b5b3a7');
+        endBranch.draw();
+
+        miniCount++;
+      }
+
+      const endFlower = new CircleDiamond(trunk.path.getPointAt(trunk.path.length), {
+        baseRadius: 6 * (this.radius),
+        radius: this.radius ,
+        skipOne: true,
+        inner: true,
+        outer: true,
+        oddOnly: false,
+        startRadians: 0,
+        radianLimit: 2 * Math.PI,
+        color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
+      },
+        {
+          x: this.radius * 14,
+          y: 0,
+        }, this.relationshipCanvasScope).init();
+
+      endFlower.draw();
+
+      let flowerCount = 0;
+      for (let i = 0; i <= 2 * Math.PI; i += Math.PI / 4) {
+        // const posX = this.origin.x + Math.cos(i) * this.config.baseRadius;
+        // const posY = this.origin.y + Math.sin(i) * this.config.baseRadius;
+
+
+        const startRadius = 12 * this.radius
+        const xPos = startRadius * Math.cos(i) + trunk.path.getPointAt(trunk.path.length).x;
+        const yPos = startRadius * Math.sin(i) + trunk.path.getPointAt(trunk.path.length).y;
+
+        const starOrigin = new Paper.Point(xPos, yPos);
+        const size = (flowerCount % 2 === 0) ? 5 : 2;
+        let color = this.originColors !== undefined ? this.originColors[2] : '#b5b3a7';
+
+        if (count % 2 === 0) {
+          color = this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7'
+        }
+
+        const starCircle = new CircleDiamond(
+          starOrigin,
+          {
+            baseRadius: size * this.radius,
+            radius: 8,
+            skipOne: false,
+            outer: false,
+            inner: false,
+            oddOnly: false,
+            startRadians: 0,
+            radianLimit: 2 * Math.PI,
+            color,
+          }, { x: 14 * this.radius, y: 0 }
+        ).init();
+
+        starCircle.draw();
+        flowerCount++;
+      }
+
+
+
+    }
+
+
+  }
+
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    console.log(error, errorInfo);
   }
 
   componentDidMount() {
 
-    this.newCanvas = this.newRef.current;
+    this.newCanvas = this.workRef.current;
 
-    this.canvasScope.setup(this.newCanvas);
+    this.relationshipCanvasScope.setup(this.newCanvas);
     // this.canvasScope.activate();
     // console.log(this.props.questionvalues);
     if (Paper !== undefined) {
-      this.canvasScope.project.activeLayer.removeChildren();
+      this.relationshipCanvasScope.project.activeLayer.removeChildren();
+      this.drawTree(new Paper.Point(this.radius, this.relationshipCanvasScope.view.center.y));
       // this.drawOriginCountryData(new Paper.Point(0, 200));
+      for (let i = 0; i < 2; i++) {
+        // this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
+        // this.drawFirstSymbol(new Paper.Point(this.radius + i * this.radius * 68, 10 * this.radius));
+        // this.drawSecondSymbol(new Paper.Point(this.radius * 55 + i * this.radius * 68, 10 * this.radius));
+        // this.drawDecorations(new Paper.Point(54 * this.radius + i * this.radius * 72, 27 * this.radius));
+        // this.drawStarSymbol(new Paper.Point(18 * this.radius + i * this.radius * 72, 27 * this.radius));
+        // this.drawBorder(new Paper.Point( this.radius + i * this.radius * 35, 54 * this.radius));
+      }
+
       for (let i = 0; i < 5; i++) {
-        this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
+
+        const posX = (i  % 2 !== 0) ? 18 : 18 ;
+
+        // this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, 51 * this.radius), i);
+        // this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2, this.radius * 2), i);
+
       }
-      for (let i = 0; i < 4; i++) {
-        if (this.props.residence !== '') {
-          this.drawResidenceCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius * i ,  this.radius * this.originMax / 2 + this.originMax * this.radius / 2));
-        }
-      }
+
+
+      // this.drawFirstSymbol(new Paper.Point(this.radius, 10 * this.radius));
+      // this.drawSecondSymbol(new Paper.Point(this.radius * 55,  10 * this.radius));
     }
 
 
   }
 
   componentDidUpdate() {
-    this.canvasScope.activate();
-    this.canvasScope.project.activeLayer.removeChildren();
+    this.originColors = this.props.colors[`${this.props.origin.cultural_group}`];
+    this.residenceColors = this.props.colors[`${this.props.residence.cultural_group}`];
+    this.relationshipCanvasScope.activate();
+    this.relationshipCanvasScope.project.activeLayer.removeChildren();
       if (Paper !== undefined) {
         // this.drawOriginCountryData(new Paper.Point(0, 200));
-        for (let i = 0; i < 5; i++) {
-          this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
-        }
-        for (let i = 0; i < 4; i++) {
-          if (this.props.residence !== '') {
-            this.drawResidenceCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius * i ,  this.radius * this.originMax / 2 + this.originMax * this.radius / 2));
-          }
-        }
+        // for (let i = 0; i < 2; i++) {
+        //   // this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
+        //   // this.drawFirstSymbol(new Paper.Point(this.radius + i * this.radius * 68, 10 * this.radius));
+        //   // this.drawSecondSymbol(new Paper.Point(this.radius * 55 + i * this.radius * 68, 10 * this.radius));
+        //   // this.drawDecorations(new Paper.Point(54 * this.radius + i * this.radius * 72, 27 * this.radius));
+        //   // this.drawStarSymbol(new Paper.Point(18 * this.radius + i * this.radius * 72, 27 * this.radius));
+        //   // this.drawBorder(new Paper.Point( this.radius + i * this.radius * 35, 54 * this.radius));
+        // }
+
+        this.drawTree(new Paper.Point(this.radius, this.relationshipCanvasScope.view.center.y));
+
+        // for (let i = 0; i < 5; i++) {
+
+        //   const posX = (i  % 2 !== 0) ? 18 : 18 ;
+
+        //   this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, 51 * this.radius), i);
+        //   this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2, this.radius * 2), i);
+
+        // }
+
       }
     }
 
   render() {
-    if (this.canvasScope.view !== null) {
-      this.canvasScope.view.draw();
+    if (this.relationshipCanvasScope.view !== null) {
+      this.relationshipCanvasScope.view.draw();
     }
     return (
-        <canvas className=' ' ref={this.newRef} {...this.props} id="canvas2" resize='true'/>
+        <canvas className=' ' ref={this.workRef} {...this.props} id="workcanvas" resize='true'/>
     )
   }
 }
 
-export default BannerCanvas;
+export default WorkCanvas;

@@ -64,7 +64,7 @@ export class CircleDiamond {
       for (let i = 0; i < path.length; i += Math.sqrt(2 * (this.config.radius ** 2))) {
         const _thePoint = path.getPointAt(i);
 
-        const stitch = new Stitch(this.config.radius, _thePoint, new Paper.Color('black'), this.config.radius / 2, 'x');
+        const stitch = new Stitch(this.config.radius, _thePoint, this.config.color || new Paper.Color('black'), this.config.radius / 2, 'x');
 
         const secondPoint = _thePoint.clone();
 
@@ -77,7 +77,7 @@ export class CircleDiamond {
         const check = this.config.oddOnly ? 2 * count + 1 : count;
 
         if (check % skip !== 0) {
-          const secondStitch = new Stitch(this.config.radius, secondPoint, 'black', this.config.radius / 2, 'x');
+          const secondStitch = new Stitch(this.config.radius, secondPoint, this.config.color || 'black', this.config.radius / 2, 'x');
 
           if (this.config.outer) {
             secondPoint.x = secondPoint.x - this.dir.y * Math.sqrt(2 * (this.config.radius ** 2));
@@ -93,7 +93,7 @@ export class CircleDiamond {
 
           if (this.config.inner) {
             secondPoint.x = secondPoint.x + this.dir.y * Math.sqrt(2 * (this.config.radius ** 2)) * 2;
-            const thirdStitch = new Stitch(this.config.radius, secondPoint, 'black', this.config.radius / 2, 'x');
+            const thirdStitch = new Stitch(this.config.radius, secondPoint, this.config.color || 'black', this.config.radius / 2, 'x');
 
             if (count > 0 && i <= path.length - Math.sqrt(2 * (this.config.radius ** 2))) {
               thirdStitch.draw();
@@ -106,7 +106,7 @@ export class CircleDiamond {
         count++;
       }
 
-      console.log(index, this.dir)
+      // console.log(index, this.dir)
     })
 
     // this.paths = {

@@ -3,6 +3,8 @@ import Papa from 'papaparse';
 import Questions from "../form/Questions";
 import NewCanvas from "../canvas/NewCanvas";
 import WorkCanvas from "../canvas/WorkCanvas";
+import RelationshipCanvas from "../canvas/RelationshipCanvas";
+import LivingCanvas from "../canvas/LivingCanvas";
 
 class Wrap extends Component {
   constructor(props) {
@@ -20,6 +22,101 @@ class Wrap extends Component {
       currentSection: 0,
       svg: '',
     };
+
+    this.palettes = {
+      northern: [
+        '#ffca00',
+        '#1f69fe',
+        '#fe940d',
+        '#c50f0e',
+        '#101415'
+      ],
+      mestizo: [
+        '#97ab74',
+        '#657fd6',
+        '#1f6db7',
+        '#fda81a',
+        '#1b1521',
+      ],
+      indoamerican: [
+        '#fa880e',
+        '#8bc6b2',
+        '#e50537',
+        '#8bc6b2',
+
+
+        '#e71167',
+
+      ],
+      iberoamerican: [
+        '#54b0af',
+        '#7eafd0',
+        '#f7da74',
+        '#03257e',
+        '#d6d8d5'
+      ],
+      creole: [
+        '#d92e50',
+        '#46b78c',
+        '#bde686',
+        '#65daee',
+        '#40377a'
+      ],
+      central: [
+        '#55a491',
+        '#b9cbcf',
+        '#34566f',
+        '#afb090',
+        '#42433e'
+      ],
+      caucasus: [
+        '#a04846',
+        '#b88491',
+        '#347579',
+        '#c6aa83',
+        '#3b3630'
+      ],
+      baltic: [
+        '#e35f5b',
+        '#c4dff0',
+        '#e2c780',
+        '#6599d2',
+        '#2a2f33'
+
+      ],
+      western: [
+        '#203e5f',
+        '#ffcc00',
+        '#eaeaea',
+        '#fee5b1',
+        '#1a2634'
+      ],
+      southern: [
+        '#2039c7',
+        '#f2dcde',
+
+        '#e8987f',
+        '#121888',
+        '#ca8d22',
+
+
+      ],
+      eastern: [
+        '#b5b3a7',
+        '#ce5f51',
+        '#bd6964',
+        '#fafafa',
+        '#1a1c1a'
+      ],
+      southeastern: [
+        '#305ee0',
+        '#ffe8e7',
+        '#c41815',
+        '#c4cbe0',
+        '#000000'
+      ]
+
+    }
 
     this.svg = '';
 
@@ -255,11 +352,33 @@ componentWillMount() {
               width="100%"
               height="auto"
               stitch='x' />
+            <LivingCanvas
+                className={'h-72 w-full'}
+                origin={this.state.origin}
+                residence={this.state.residence}
+                colors={this.palettes}
+                data={this.state.sections[0] !== undefined ? this.state.sections[0].questionValues : [0,0,0,0,0,0,0] }
+                sections={this.state.sections}
+                questionvalues={this.state.sections[this.state.currentSection].questionValues}
+                width="100%"
+                height="auto"
+                stitch='x' />
             <WorkCanvas
-              className={'h-full w-full'}
+              className={' h-100 w-full'}
               origin={this.state.origin}
               residence={this.state.residence}
+              colors={this.palettes}
               data={this.state.sections[1] !== undefined ? this.state.sections[1].questionValues : [0,0,0,0,0,0,0] }
+              sections={this.state.sections}
+              width="100%"
+              height="auto"
+              stitch='x' />
+             <RelationshipCanvas
+              className={'h-72 w-full'}
+              origin={this.state.origin}
+              residence={this.state.residence}
+              colors={this.palettes}
+              data={this.state.sections[2] !== undefined ? this.state.sections[2].questionValues : [0,0,0,0,0,0,0] }
               sections={this.state.sections}
               width="100%"
               height="auto"
