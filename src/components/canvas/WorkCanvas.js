@@ -498,12 +498,12 @@ class WorkCanvas extends Component {
 
     this.drawBorderDown = (origin, index) => {
 
-      const size = (index % 2 !== 0) ? 17 : 18 ;
+      const size = (index % 2 !== 0) ? 18 : 18 ;
 
         const starCircle = new CircleDiamond(
           origin,
           {
-            baseRadius: size * this.radius,
+            baseRadius: (size + 1 + this.props.data[3] / 6) * this.radius,
             radius: this.radius,
             skipOne: false,
             outer: false,
@@ -517,19 +517,34 @@ class WorkCanvas extends Component {
         const starCircle2 = new CircleDiamond(
           origin,
           {
-            baseRadius: (size - 4) * this.radius,
+            baseRadius: (size/3 + this.props.data[0]/3) * this.radius,
             radius: this.radius,
             skipOne: true,
-            outer: true,
-            inner: true,
+            outer: false,
+            inner: false,
             oddOnly: false,
             startRadians: Math.PI,
+            radianLimit:  2 * Math.PI,
+          }, { x: 0, y: 0 }
+        ).init();
+
+        const starCircle3 = new CircleDiamond(
+          origin,
+          {
+            baseRadius: (size/4 + this.props.data[1]/3) * this.radius,
+            radius: this.radius,
+            skipOne: true,
+            outer:true,
+            inner: true,
+            oddOnly: false,
+            startRadians:  Math.PI,
             radianLimit: 2 * Math.PI,
           }, { x: 0, y: 0 }
         ).init();
 
       starCircle.draw();
       starCircle2.draw();
+      starCircle3.draw();
     }
 
     this.drawBorderUp = (origin, index) => {
