@@ -27,7 +27,7 @@ function mapRange (_in, in_min, in_max, out_min, out_max) {
 }
 
 
-class WorkCanvas extends Component {
+class RelationshipCanvas extends Component {
   constructor(props) {
     super(props);
 
@@ -147,134 +147,10 @@ class WorkCanvas extends Component {
       // console.log(svg);
     }
 
-
-    this.drawDecorations = (origin) => {
-
-      const circle = new CircleDiamond(
-        origin,
-        {
-          baseRadius: (4 + this.props.data[4]) * this.radius,
-          radius: this.radius,
-          skipOne: true,
-          outer: this.props.data[2][0] < 20,
-          inner: true,
-          oddOnly: this.props.data[2][0] > 20,
-          startRadians: 0,
-          radianLimit: 2 * Math.PI,
-          color: this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7',
-        }, { x: 0, y: 0}
-      ).init();
-
-      const circle2 = new CircleDiamond(
-        origin,
-        {
-          baseRadius: this.props.data[3] * 0.8 * this.radius,
-          radius: this.radius,
-          skipOne: false,
-          inner: true,
-          outer: false,
-          oddOnly: false,
-          startRadians: 0,
-          radianLimit: 2 * Math.PI,
-          color: this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7'
-        }, { x: 0, y: 0}
-      ).init();
-
-      const circle3 = new CircleDiamond(
-        origin,
-        {
-          baseRadius: 18 * this.radius,
-          radius: this.radius,
-          skipOne: true,
-          inner: true,
-          outer: true,
-          oddOnly: false,
-          startRadians: 0,
-          radianLimit: 2 * Math.PI,
-          color: this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7'
-        }, { x: 0, y: 0}
-      ).init();
-
-      circle.draw();
-      circle2.draw();
-      circle3.draw();
-    }
-
-    this.drawStarSymbol = (origin) => {
-      const circle = new CircleDiamond(
-        origin,
-        {
-          baseRadius:18 * this.radius,
-          radius: this.radius,
-          skipOne: false,
-          outer: false,
-          inner: false,
-          oddOnly: true,
-          startRadians: 0,
-          radianLimit: 2 * Math.PI,
-          color: this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7',
-        }, { x: 0, y: 0}
-      ).init();
-
-      circle.draw();
-
-      const innerCircle = new CircleDiamond(
-        origin,
-        {
-          baseRadius:this.props.data[2][0] / 4 * this.radius,
-          radius: this.radius,
-          skipOne: false,
-          outer: false,
-          inner: false,
-          oddOnly: true,
-          startRadians: 0,
-          radianLimit: 2 * Math.PI,
-          color: this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7'
-        }, { x: 0, y: 0}
-      ).init();
-
-      innerCircle.draw();
-
-      let count = 0;
-      if (this.props.data[2][1] !== undefined)
-      {
-        const divider = this.props.data[2][1].length > 0 ? Math.PI / this.props.data[2][1].length / 2 : Math.PI * 0.25;
-        for (let i = 0; i <= 2 * Math.PI; i += divider) {
-          // const posX = this.origin.x + Math.cos(i) * this.config.baseRadius;
-          // const posY = this.origin.y + Math.sin(i) * this.config.baseRadius;
-
-
-          const startRadius = this.props.data[2][0] / this.props.data[2][1].length / 2 * this.radius;
-          const xPos = startRadius * Math.cos(i) + origin.x;
-          const yPos = startRadius * Math.sin(i) + origin.y;
-
-          const starOrigin = new Paper.Point(xPos, yPos);
-          const size = (count % 2 === 0) ? 5 : 2;
-          let color = this.originColors !== undefined ? this.originColors[2] : '#b5b3a7';
-
-          if (count % 2 === 0) {
-            color = this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7'
-          }
-
-          const starCircle = new CircleDiamond(
-            starOrigin,
-            {
-              baseRadius: size * this.radius,
-              radius: this.radius,
-              skipOne: false,
-              outer: false,
-              inner: false,
-              oddOnly: false,
-              startRadians: 0,
-              radianLimit: 2 * Math.PI,
-              color,
-            }, { x: 0, y: 0 }
-          ).init();
-
-          starCircle.draw();
-          count++;
-        }
-      }
+    this.updateRadius = () => {
+      // this.radius = this.relationshipCanvasScope.view.viewSize.width / 300;
+      // this.relationshipCanvasScope.project.activeLayer.removeChildren();
+      // this.relationshipCanvasScope.view.draw();
     }
 
     this.drawBorderDown = (origin, index) => {
@@ -386,13 +262,18 @@ class WorkCanvas extends Component {
     }
 
     this.drawTree = (origin, index = 0) => {
-      const trunk = new StitchPath(8, this.relationshipCanvasScope, origin, new Paper.Point(origin.x + this.radius * 200, origin.y), 'x');
+      const trunkL = this.props.data[1] > 0 ? 100 + this.props.data[1] * 3 : 200;
+
+      const trunk = new StitchPath(8, this.relationshipCanvasScope, origin, new Paper.Point(origin.x + this.radius * trunkL, origin.y), 'x', this.originColors !== undefined ? this.originColors[1] : '#b5b3a7');
       trunk.draw()
+
 
       let count = 0;
       for (let i = 0; i < trunk.path.length - trunk.path.length / 10; i += trunk.path.length / 10) {
         const _pathPoint = trunk.path.getPointAt(i);
         let posX, posY;
+
+        let offset = [-1, -1];
 
         const length = 20 * this.radius;
 
@@ -406,32 +287,136 @@ class WorkCanvas extends Component {
 
         const _to = new Paper.Point(posX, posY);
 
-        const branch = new StitchPath(8, this.relationshipCanvasScope, _pathPoint, _to, 'x' , this.originColors !== undefined ? this.originColors[0] : '#b5b3a7')
+        const branch = new StitchPath(8, this.relationshipCanvasScope, _pathPoint, _to, 'x' , this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7')
         branch.draw();
 
         const _endPoint = branch.path.getPointAt(branch.path.length);
-        const _endPointTo = new Paper.Point(_endPoint.x + length / 2, _endPoint.y);
+        const _endPointTo = new Paper.Point(_endPoint.x + length / 3, _endPoint.y);
 
-        const endBranch = new StitchPath(8, this.relationshipCanvasScope, _endPoint, _endPointTo, 'x', this.originColors !== undefined ? this.originColors[0] : '#b5b3a7');
-        endBranch.draw();
+        const _endPointToTwo = new Paper.Point(_endPoint.x - length / 3,_endPoint.y - length / 3);
 
-        const endFlower = new CircleDiamond(endBranch.path.getPointAt(endBranch.path.length), {
-          baseRadius: 6 * (this.radius),
-          radius: this.radius ,
-          skipOne: true,
-          inner: true,
-          outer: true,
-          oddOnly: false,
-          startRadians: 0,
-          radianLimit: 2 * Math.PI,
-          color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
-        },
-          {
-            x: this.radius * 4,
-            y: 0,
-          }, this.relationshipCanvasScope).init();
+        if (count % 2 === 0) {
+          _endPointToTwo.y = _endPoint.y + length / 3
+          offset[1] = 1;
+        }
 
-        endFlower.draw();
+
+
+
+        for (let i = 0; i <= this.props.data[0]; i++) {
+
+          const posX = _endPoint.x + Math.cos(1.5 * Math.PI -  Math.PI / 6 * i) * length / 3;
+          const posY = _endPoint.y + Math.sin(1.5 * Math.PI -  Math.PI / 6 * i) * length / 3;
+
+          const endBranches = new StitchPath(8, this.relationshipCanvasScope, _endPoint, new Paper.Point(posX, posY), 'x', this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7');
+          endBranches.draw();
+
+        if (endBranches.path !== null)
+         { const endFlower = new CircleDiamond(endBranches.path.getPointAt(endBranches.path.length), {
+            baseRadius: 2 * (this.radius),
+            radius: this.radius ,
+            skipOne: true,
+            inner: false,
+            outer: true,
+            oddOnly: false,
+            startRadians: 0,
+            radianLimit: 2 * Math.PI,
+            color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
+          },
+            {
+              x: 0,
+              y: 0,
+            }, this.relationshipCanvasScope).init();
+
+          endFlower.draw();}
+
+        }
+
+
+
+        if (this.props.data[this.props.data.length - 2] > 0) {
+          const endBranch = new StitchPath(8, this.relationshipCanvasScope, _endPoint, _endPointTo, 'x', this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7');
+          endBranch.draw();
+
+          const endFlower = new CircleDiamond(endBranch.path.getPointAt(endBranch.path.length), {
+            baseRadius: 5 * (this.radius),
+            radius: this.radius ,
+            skipOne: true,
+            inner: false,
+            outer: true,
+            oddOnly: false,
+            startRadians: 0,
+            radianLimit: 2 * Math.PI,
+            color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
+          },
+            {
+              x: this.radius * 4,
+              y: 0,
+            }, this.relationshipCanvasScope).init();
+
+
+
+            const endInnerFlower = new CircleDiamond(endBranch.path.getPointAt(endBranch.path.length), {
+              baseRadius: 1 * (this.radius),
+              radius: this.radius ,
+              skipOne: true,
+              inner: false,
+              outer: true,
+              oddOnly: false,
+              startRadians: 0,
+              radianLimit: 5 * Math.PI,
+              color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
+            },
+              {
+                x: this.radius * 4,
+                y: 0,
+              }, this.relationshipCanvasScope).init();
+
+
+
+          endInnerFlower.draw();
+          endFlower.draw();
+        }
+
+        if (this.props.data[this.props.data.length - 2] > 1) {
+          const endBranchTwo = new StitchPath(8, this.relationshipCanvasScope, _endPoint, _endPointToTwo, 'x', this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7');
+          endBranchTwo.draw();
+
+          const endFlowerTwo = new CircleDiamond(endBranchTwo.path.getPointAt(endBranchTwo.path.length), {
+            baseRadius: 4 * (this.radius),
+            radius: this.radius ,
+            skipOne: true,
+            inner: false,
+            outer: true,
+            oddOnly: false,
+            startRadians: 0,
+            radianLimit: 2 * Math.PI,
+            color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
+          },
+            {
+              x: offset[0] * this.radius * 3,
+              y: offset[1] * this.radius * 2,
+            }, this.relationshipCanvasScope).init();
+
+            const endInnerFlowerTwo = new CircleDiamond(endBranchTwo.path.getPointAt(endBranchTwo.path.length), {
+              baseRadius: 0.1 * (this.radius),
+              radius: this.radius ,
+              skipOne: true,
+              inner: false,
+              outer: true,
+              oddOnly: false,
+              startRadians: 0,
+              radianLimit: 5 * Math.PI,
+              color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
+            },
+              {
+                x: -this.radius * 3,
+                y: offset[1] * this.radius * 2,
+              }, this.relationshipCanvasScope).init();
+
+          endInnerFlowerTwo.draw();
+          endFlowerTwo.draw();
+        }
 
         count++;
       }
@@ -453,14 +438,26 @@ class WorkCanvas extends Component {
 
         const _to = new Paper.Point(posX, posY);
 
-        const branch = new StitchPath(8, this.relationshipCanvasScope, _pathPoint, _to, 'x', this.originColors !== undefined ? this.originColors[0] : '#b5b3a7')
+        const branch = new StitchPath(8, this.relationshipCanvasScope, _pathPoint, _to, 'x', this.resideneColors !== undefined ? this.residenceColors[0] : '#b5b3a7')
         branch.draw();
 
         const _endPoint = branch.path.getPointAt(branch.path.length);
         const _endPointTo = new Paper.Point(_endPoint.x - length / 2, _endPoint.y);
 
-        const endBranch = new StitchPath(8, this.relationshipCanvasScope, _endPoint, _endPointTo, 'x', this.originColors !== undefined ? this.originColors[2] : '#b5b3a7');
+        const _endPointToTwo = new Paper.Point(_endPointTo.x - length / 4, _endPointTo.y + length/2);
+
+        if (miniCount % 2 === 0) {
+          _endPointToTwo.y = _endPointTo.y - length/2;
+        }
+
+        const endBranch = new StitchPath(8, this.relationshipCanvasScope, _endPoint, _endPointTo, 'x', this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7');
         endBranch.draw();
+
+        const endBranchTwo = new StitchPath(8, this.relationshipCanvasScope, _endPointTo, _endPointToTwo, 'x', this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7');
+        endBranchTwo.draw();
+
+        const endBranchThree = new StitchPath(8, this.relationshipCanvasScope, _endPointToTwo, _pathPoint, 'x', this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7');
+        endBranchThree.draw();
 
         miniCount++;
       }
@@ -474,7 +471,7 @@ class WorkCanvas extends Component {
         oddOnly: false,
         startRadians: 0,
         radianLimit: 2 * Math.PI,
-        color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
+        color: this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7'
       },
         {
           x: this.radius * 14,
@@ -495,10 +492,10 @@ class WorkCanvas extends Component {
 
         const starOrigin = new Paper.Point(xPos, yPos);
         const size = (flowerCount % 2 === 0) ? 5 : 2;
-        let color = this.originColors !== undefined ? this.originColors[2] : '#b5b3a7';
+        let color = this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7';
 
         if (count % 2 === 0) {
-          color = this.residenceColors !== undefined ? this.residenceColors[1] : '#b5b3a7'
+          color = this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7'
         }
 
         const starCircle = new CircleDiamond(
@@ -532,15 +529,23 @@ class WorkCanvas extends Component {
     console.log(error, errorInfo);
   }
 
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateRadius);
+  }
+
   componentDidMount() {
 
     this.newCanvas = this.workRef.current;
+    // window.addEventListener("resize", this.updateRadius);
 
     this.relationshipCanvasScope.setup(this.newCanvas);
     // this.canvasScope.activate();
     // console.log(this.props.questionvalues);
     if (Paper !== undefined) {
       this.relationshipCanvasScope.project.activeLayer.removeChildren();
+      // this.radius = this.relationshipCanvasScope.view.viewSize;
+      this.radius = this.relationshipCanvasScope.view.viewSize.width / 500;
+      console.log(this.relationshipCanvasScope.view.viewSize.width)
       this.drawTree(new Paper.Point(this.radius, this.relationshipCanvasScope.view.center.y));
       // this.drawOriginCountryData(new Paper.Point(0, 200));
       for (let i = 0; i < 2; i++) {
@@ -609,4 +614,4 @@ class WorkCanvas extends Component {
   }
 }
 
-export default WorkCanvas;
+export default RelationshipCanvas;

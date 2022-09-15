@@ -421,6 +421,7 @@ class RelationshipCanvas extends Component {
     // console.log(this.props.questionvalues);
     if (Paper !== undefined) {
       this.livingScope.project.activeLayer.removeChildren();
+      this.radius = this.livingScope.view.viewSize.width / 300;
       // this.drawOriginCountryData(new Paper.Point(0, 200));
       for (let i = 0; i < 5; i++) {
         this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);

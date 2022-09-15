@@ -635,8 +635,9 @@ class WorkCanvas extends Component {
     // console.log(this.props.questionvalues);
     if (Paper !== undefined) {
       this.workCanvasScope.project.activeLayer.removeChildren();
+      this.radius = this.workCanvasScope.view.viewSize.width / 500;
       // this.drawOriginCountryData(new Paper.Point(0, 200));
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 3; i++) {
         // this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
         // this.drawFirstSymbol(new Paper.Point(this.radius + i * this.radius * 68, 10 * this.radius));
         // this.drawSecondSymbol(new Paper.Point(this.radius * 55 + i * this.radius * 68, 10 * this.radius));
@@ -645,7 +646,7 @@ class WorkCanvas extends Component {
         // this.drawBorder(new Paper.Point( this.radius + i * this.radius * 35, 54 * this.radius));
       }
 
-      for (let i = 0; i < 5; i++) {
+      for (let i = 0; i < 7; i++) {
 
         const posX = (i  % 2 !== 0) ? 18 : 18 ;
 
@@ -669,7 +670,7 @@ class WorkCanvas extends Component {
     this.workCanvasScope.project.activeLayer.removeChildren();
       if (Paper !== undefined) {
         // this.drawOriginCountryData(new Paper.Point(0, 200));
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 3; i++) {
           // this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
           // this.drawFirstSymbol(new Paper.Point(this.radius + i * this.radius * 68, 10 * this.radius));
           // this.drawSecondSymbol(new Paper.Point(this.radius * 55 + i * this.radius * 68, 10 * this.radius));
@@ -678,7 +679,7 @@ class WorkCanvas extends Component {
           // this.drawBorder(new Paper.Point( this.radius + i * this.radius * 35, 54 * this.radius));
         }
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 7; i++) {
 
           const posX = (i  % 2 !== 0) ? 18 : 18 ;
 

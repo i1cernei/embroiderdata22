@@ -6,6 +6,7 @@
   text-align: center;
   background-color: #fffdf6;
   /* height: 100vh; */
+  max-width: 100vw;
 }
 
 .App-logo {
@@ -47,7 +48,7 @@ header canvas {
 }
 
 .formQuestions {
-  min-width: 50%;
+  /* -width: 50%; */
 }
 
 .formQuestions ul {

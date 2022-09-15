@@ -46,10 +46,28 @@ class Question extends Component {
 
     switch (Number(this.props.type)) {
       case 0:
+
+        let max = 10;
+
+        switch (this.props.section) {
+          case 0:
+            max = 7;
+            break;
+          case 2:
+            if (this.props.index > 0) {
+              max = 100;
+            } else {
+              max = 7;
+            }
+            break;
+          default:
+            max = 7;
+        }
+
         input = (
           <input key={this.props.index} onChange={(event) => this.props.change(event, this.props.index)}
             className="text-4xl border-2 border-blue-400 p-6 w-32 bg-transparent rounded-full"
-            type='number' max={this.props.section > 0 ? 10 : 7}
+            type='number' min="0" max={max}
             defaultValue={0}
           ></input>);
         break;

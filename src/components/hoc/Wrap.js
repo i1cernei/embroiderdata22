@@ -318,7 +318,7 @@ componentWillMount() {
   render() {
 
     return (
-      <div className="wrap w-full flex flex-row flex-nowrap gap-x-12 relative items-start">
+      <div className="wrap max-w-full flex flex-row flex-nowrap gap-x-12 relative items-start">
         {
             this.state.sections[this.state.currentSection] !== undefined
              ?
@@ -353,7 +353,7 @@ componentWillMount() {
               height="auto"
               stitch='x' />
             <LivingCanvas
-                className={'h-72 w-full'}
+                className={'h-100 w-full'}
                 origin={this.state.origin}
                 residence={this.state.residence}
                 colors={this.palettes}
@@ -374,11 +374,11 @@ componentWillMount() {
               height="auto"
               stitch='x' />
              <RelationshipCanvas
-              className={'h-72 w-full'}
+              className={'h-100 w-full'}
               origin={this.state.origin}
               residence={this.state.residence}
               colors={this.palettes}
-              data={this.state.sections[2] !== undefined ? this.state.sections[2].questionValues : [0,0,0,0,0,0,0] }
+              data={this.state.sections[2] !== undefined ? this.state.sections[2].questionValues : [1,0,0,0,0,0,0] }
               sections={this.state.sections}
               width="100%"
               height="auto"
