@@ -635,14 +635,14 @@ class WorkCanvas extends Component {
     // console.log(this.props.questionvalues);
     if (Paper !== undefined) {
       this.workCanvasScope.project.activeLayer.removeChildren();
-      this.radius = this.workCanvasScope.view.viewSize.width / 500;
+      this.radius = this.workCanvasScope.view.viewSize.width / 250;
       // this.drawOriginCountryData(new Paper.Point(0, 200));
       for (let i = 0; i < 3; i++) {
         // this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
         // this.drawFirstSymbol(new Paper.Point(this.radius + i * this.radius * 68, 10 * this.radius));
         // this.drawSecondSymbol(new Paper.Point(this.radius * 55 + i * this.radius * 68, 10 * this.radius));
-        this.drawDecorations(new Paper.Point(54 * this.radius + i * this.radius * 72, 27 * this.radius));
-        this.drawStarSymbol(new Paper.Point(18 * this.radius + i * this.radius * 72, 27 * this.radius));
+        this.drawDecorations(new Paper.Point(54 * this.radius + i * this.radius * 72, this.workCanvasScope.view.center.y));
+        this.drawStarSymbol(new Paper.Point(18 * this.radius + i * this.radius * 72, this.workCanvasScope.view.center.y));
         // this.drawBorder(new Paper.Point( this.radius + i * this.radius * 35, 54 * this.radius));
       }
 
@@ -650,8 +650,8 @@ class WorkCanvas extends Component {
 
         const posX = (i  % 2 !== 0) ? 18 : 18 ;
 
-        this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, 51 * this.radius), i);
-        this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2, this.radius * 2), i);
+        this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, this.workCanvasScope.view.viewSize.height + this.radius ), i);
+        this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2, 0 - this.radius), i);
 
       }
 
@@ -674,8 +674,8 @@ class WorkCanvas extends Component {
           // this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);
           // this.drawFirstSymbol(new Paper.Point(this.radius + i * this.radius * 68, 10 * this.radius));
           // this.drawSecondSymbol(new Paper.Point(this.radius * 55 + i * this.radius * 68, 10 * this.radius));
-          this.drawDecorations(new Paper.Point(54 * this.radius + i * this.radius * 72, 27 * this.radius));
-          this.drawStarSymbol(new Paper.Point(18 * this.radius + i * this.radius * 72, 27 * this.radius));
+          this.drawDecorations(new Paper.Point(54 * this.radius + i * this.radius * 72, this.workCanvasScope.view.center.y));
+          this.drawStarSymbol(new Paper.Point(18 * this.radius + i * this.radius * 72, this.workCanvasScope.view.center.y));
           // this.drawBorder(new Paper.Point( this.radius + i * this.radius * 35, 54 * this.radius));
         }
 
@@ -683,8 +683,8 @@ class WorkCanvas extends Component {
 
           const posX = (i  % 2 !== 0) ? 18 : 18 ;
 
-          this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, 51 * this.radius), i);
-          this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2, this.radius * 2), i);
+          this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2,this.workCanvasScope.view.center.y + ( 24 + this.props.data[3] / 6) * this.radius), i);
+          this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2,this.workCanvasScope.view.center.y - ( 24 + this.props.data[3] / 6) * this.radius), i);
 
         }
 
