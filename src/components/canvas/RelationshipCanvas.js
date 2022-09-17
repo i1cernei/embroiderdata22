@@ -208,13 +208,17 @@ class RelationshipCanvas extends Component {
     }
 
     this.drawBorderUp = (origin, index) => {
+      const limit = this.props.data[2] || 2;
 
-      const size = (index % 2 !== 0) ? 18 : 18 ;
 
-        const starCircle = new CircleDiamond(
+      for (let o = 0; o < limit;  o++) {
+      // {
+        const size = (index % 2 !== 0) ? 10 : 10;
+
+        const upperTriangle = new CircleDiamond(
           origin,
           {
-            baseRadius: (size + 1 + this.props.data[3] / 6) * this.radius,
+            baseRadius: (size + 1 + this.props.data[2] / 3) * this.radius,
             radius: this.radius,
             skipOne: false,
             outer: false,
@@ -223,53 +227,55 @@ class RelationshipCanvas extends Component {
             startRadians: 0,
             radianLimit: Math.PI,
             color: this.originColors !== undefined ? this.originColors[3] : '#b5b3a7',
-          }, { x: 0, y: 0 }
+          }, { x: o/2 * this.radius * limit , y: 0 }
         ).init();
 
-        const starCircle2 = new CircleDiamond(
+        const smallTriangle = new CircleDiamond(
           origin,
           {
-            baseRadius: (size/3 + this.props.data[0]/3) * this.radius,
+            baseRadius: (size/2 + 1 + this.props.data[2] / 6) * this.radius,
             radius: this.radius,
-            skipOne: true,
+            skipOne: false,
             outer: false,
             inner: false,
             oddOnly: false,
-            startRadians: 0,
-            radianLimit: Math.PI,
-            color: this.originColors !== undefined ? this.originColors[1] : '#b5b3a7',
-          }, { x: 0, y: 0 }
+            startRadians: Math.PI,
+            radianLimit: 2 * Math.PI,
+            color: this.originColors !== undefined ? this.originColors[3] : '#b5b3a7',
+          }, { x: 5 * o / 2 * this.radius * limit , y: - (size/6  + this.props.data[2] / 6) * this.radius }
         ).init();
 
-        const starCircle3 = new CircleDiamond(
+        const lowerTriangle = new CircleDiamond(
           origin,
           {
-            baseRadius: (size/4 + this.props.data[1]/3) * this.radius,
+            baseRadius: (size + 1 + this.props.data[2] / 3) * this.radius,
             radius: this.radius,
-            skipOne: true,
-            outer:true,
-            inner: true,
+            skipOne: false,
+            outer: false,
+            inner: false,
             oddOnly: false,
-            startRadians: 0,
-            radianLimit: Math.PI,
-            color: this.originColors !== undefined ? this.originColors[0] : '#b5b3a7',
-          }, { x: 0, y: 0 }
+            startRadians: Math.PI,
+            radianLimit: 2 * Math.PI,
+            color: this.originColors !== undefined ? this.originColors[3] : '#b5b3a7',
+          }, { x: o/2  * this.radius * limit , y: (size + 1 + this.props.data[2] / 2) * this.radius }
         ).init();
 
-      starCircle.draw();
-      starCircle2.draw();
-      starCircle3.draw();
+        upperTriangle.draw();
+        smallTriangle.draw();
+        lowerTriangle.draw();
+      }
+
     }
 
     this.drawTree = (origin, index = 0) => {
-      const trunkL = this.props.data[1] > 0 ? 100 + this.props.data[1] * 3 : 200;
+      const trunkL = this.props.data[1] > 0 ? Math.max(Math.min(this.props.data[1] / 2 * 5, 200), 70) : 200;
 
-      const trunk = new StitchPath(8, this.relationshipCanvasScope, origin, new Paper.Point(origin.x + this.radius * trunkL, origin.y), 'x', this.originColors !== undefined ? this.originColors[1] : '#b5b3a7');
+      const trunk = new StitchPath(this.radius, this.relationshipCanvasScope, origin, new Paper.Point(origin.x + this.radius * trunkL, origin.y), 'x', this.originColors !== undefined ? this.originColors[1] : '#b5b3a7');
       trunk.draw()
 
 
       let count = 0;
-      for (let i = 0; i < trunk.path.length - trunk.path.length / 10; i += trunk.path.length / 10) {
+      for (let i = trunk.path.length / 10; i < trunk.path.length - trunk.path.length / 10; i += trunk.path.length / 11) {
         const _pathPoint = trunk.path.getPointAt(i);
         let posX, posY;
 
@@ -277,26 +283,26 @@ class RelationshipCanvas extends Component {
 
         const length = 20 * this.radius;
 
-        posX = _pathPoint.x + Math.cos(Math.PI / 3) * length;
-        posY = _pathPoint.y + Math.sin(Math.PI / 3) * length;
+        posX = _pathPoint.x + Math.cos(Math.PI / 3) * length / 1.1;
+        posY = _pathPoint.y + Math.sin(Math.PI / 3) * length / 1.1;
 
         if (count % 2 !== 0) {
-          posX = _pathPoint.x + Math.cos(-Math.PI / 3) *  length;
-          posY = _pathPoint.y + Math.sin(-Math.PI / 3) * length;
+          posX = _pathPoint.x + Math.cos(-Math.PI / 3) *  length / 1.1;
+          posY = _pathPoint.y + Math.sin(-Math.PI / 3) * length / 1.1;
         }
 
         const _to = new Paper.Point(posX, posY);
 
-        const branch = new StitchPath(8, this.relationshipCanvasScope, _pathPoint, _to, 'x' , this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7')
+        const branch = new StitchPath(this.radius, this.relationshipCanvasScope, _pathPoint, _to, 'x' , this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7')
         branch.draw();
 
         const _endPoint = branch.path.getPointAt(branch.path.length);
         const _endPointTo = new Paper.Point(_endPoint.x + length / 3, _endPoint.y);
 
-        const _endPointToTwo = new Paper.Point(_endPoint.x - length / 3,_endPoint.y - length / 3);
+        const _endPointToTwo = new Paper.Point(_endPoint.x - length / 2,_endPoint.y - length / 2);
 
         if (count % 2 === 0) {
-          _endPointToTwo.y = _endPoint.y + length / 3
+          _endPointToTwo.y = _endPoint.y + length / 2
           offset[1] = 1;
         }
 
@@ -305,37 +311,42 @@ class RelationshipCanvas extends Component {
 
         for (let i = 0; i <= this.props.data[0]; i++) {
 
-          const posX = _endPoint.x + Math.cos(1.5 * Math.PI -  Math.PI / 6 * i) * length / 3;
-          const posY = _endPoint.y + Math.sin(1.5 * Math.PI -  Math.PI / 6 * i) * length / 3;
+        //   const posX = _endPoint.x + Math.cos(-0.75 * Math.PI - 2 * Math.PI / 3 / this.radius * i) * length ;
+        //   let posY = _endPoint.y + Math.sin(-0.75 * Math.PI - 2 * Math.PI / 3 / this.radius * i) * length ;
 
-          const endBranches = new StitchPath(8, this.relationshipCanvasScope, _endPoint, new Paper.Point(posX, posY), 'x', this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7');
-          endBranches.draw();
+        //   if (count % 2 === 0) {
+        //     posY = _endPoint.y - Math.sin( Math.PI + 2 * Math.PI / 3 / this.radius * i) * length;
+        //   }
 
-        if (endBranches.path !== null)
-         { const endFlower = new CircleDiamond(endBranches.path.getPointAt(endBranches.path.length), {
-            baseRadius: 2 * (this.radius),
-            radius: this.radius ,
-            skipOne: true,
-            inner: false,
-            outer: true,
-            oddOnly: false,
-            startRadians: 0,
-            radianLimit: 2 * Math.PI,
-            color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
-          },
-            {
-              x: 0,
-              y: 0,
-            }, this.relationshipCanvasScope).init();
+        //   const endBranches = new StitchPath(this.radius, this.relationshipCanvasScope, _endPoint, new Paper.Point(posX, posY), 'x', this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7');
+        //   endBranches.draw();
 
-          endFlower.draw();}
+        // if (endBranches.path !== null)
+        //  { const endFlower = new CircleDiamond(endBranches.path.getPointAt(endBranches.path.length), {
+        //     baseRadius: 2 * (this.radius),
+        //     radius: this.radius ,
+        //     skipOne: true,
+        //     inner: false,
+        //     outer: true,
+        //     oddOnly: true,
+        //     startRadians: 0,
+        //     radianLimit: 2 * Math.PI,
+        //     color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
+        //   },
+        //     {
+        //       x: 0,
+        //       y: 0,
+        //     }, this.relationshipCanvasScope).init();
+
+        //   endFlower.draw();
+        // }
 
         }
 
 
-
+        // parents
         if (this.props.data[this.props.data.length - 2] > 0) {
-          const endBranch = new StitchPath(8, this.relationshipCanvasScope, _endPoint, _endPointTo, 'x', this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7');
+          const endBranch = new StitchPath(this.radius, this.relationshipCanvasScope, _endPoint, _endPointTo, 'x', this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7');
           endBranch.draw();
 
           const endFlower = new CircleDiamond(endBranch.path.getPointAt(endBranch.path.length), {
@@ -378,8 +389,9 @@ class RelationshipCanvas extends Component {
           endFlower.draw();
         }
 
+         // parents one
         if (this.props.data[this.props.data.length - 2] > 1) {
-          const endBranchTwo = new StitchPath(8, this.relationshipCanvasScope, _endPoint, _endPointToTwo, 'x', this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7');
+          const endBranchTwo = new StitchPath(this.radius, this.relationshipCanvasScope, _endPoint, _endPointToTwo, 'x', this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7');
           endBranchTwo.draw();
 
           const endFlowerTwo = new CircleDiamond(endBranchTwo.path.getPointAt(endBranchTwo.path.length), {
@@ -410,7 +422,7 @@ class RelationshipCanvas extends Component {
               color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
             },
               {
-                x: -this.radius * 3,
+                x: offset[0] * this.radius * 3,
                 y: offset[1] * this.radius * 2,
               }, this.relationshipCanvasScope).init();
 
@@ -422,7 +434,7 @@ class RelationshipCanvas extends Component {
       }
 
       let miniCount = 0
-      for (let i = 0; i < trunk.path.length - trunk.path.length / 20; i += trunk.path.length / 30) {
+      for (let i = trunk.path.length / 20; i < trunkL * this.radius - trunk.path.length / 10; i += trunk.path.length / this.props.data[4] / 3  || 30) {
         const _pathPoint = trunk.path.getPointAt(i);
         let posX, posY;
 
@@ -438,7 +450,7 @@ class RelationshipCanvas extends Component {
 
         const _to = new Paper.Point(posX, posY);
 
-        const branch = new StitchPath(8, this.relationshipCanvasScope, _pathPoint, _to, 'x', this.resideneColors !== undefined ? this.residenceColors[0] : '#b5b3a7')
+        const branch = new StitchPath(this.radius, this.relationshipCanvasScope, _pathPoint, _to, 'x', this.resideneColors !== undefined ? this.residenceColors[0] : '#b5b3a7')
         branch.draw();
 
         const _endPoint = branch.path.getPointAt(branch.path.length);
@@ -450,20 +462,20 @@ class RelationshipCanvas extends Component {
           _endPointToTwo.y = _endPointTo.y - length/2;
         }
 
-        const endBranch = new StitchPath(8, this.relationshipCanvasScope, _endPoint, _endPointTo, 'x', this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7');
+        const endBranch = new StitchPath(this.radius, this.relationshipCanvasScope, _endPoint, _endPointTo, 'x', this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7');
         endBranch.draw();
 
-        const endBranchTwo = new StitchPath(8, this.relationshipCanvasScope, _endPointTo, _endPointToTwo, 'x', this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7');
+        const endBranchTwo = new StitchPath(this.radius, this.relationshipCanvasScope, _endPointTo, _endPointToTwo, 'x', this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7');
         endBranchTwo.draw();
 
-        const endBranchThree = new StitchPath(8, this.relationshipCanvasScope, _endPointToTwo, _pathPoint, 'x', this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7');
+        const endBranchThree = new StitchPath(this.radius, this.relationshipCanvasScope, _endPointToTwo, _pathPoint, 'x', this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7');
         endBranchThree.draw();
 
         miniCount++;
       }
 
       const endFlower = new CircleDiamond(trunk.path.getPointAt(trunk.path.length), {
-        baseRadius: 6 * (this.radius),
+        baseRadius: Math.min(this.props.data[0] * 8, 12 ) * (this.radius),
         radius: this.radius ,
         skipOne: true,
         inner: true,
@@ -474,19 +486,19 @@ class RelationshipCanvas extends Component {
         color: this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7'
       },
         {
-          x: this.radius * 14,
+          x: this.radius * Math.min(this.props.data[0] * 6 + 2, 14 ),
           y: 0,
         }, this.relationshipCanvasScope).init();
 
       endFlower.draw();
 
       let flowerCount = 0;
-      for (let i = 0; i <= 2 * Math.PI; i += Math.PI / 4) {
+      for (let i = 0; i <= 2 * Math.PI; i += Math.PI / Math.max(this.props.data[0], 2)) {
         // const posX = this.origin.x + Math.cos(i) * this.config.baseRadius;
         // const posY = this.origin.y + Math.sin(i) * this.config.baseRadius;
 
 
-        const startRadius = 12 * this.radius
+        const startRadius = this.props.data[0] * 1.5 * this.radius
         const xPos = startRadius * Math.cos(i) + trunk.path.getPointAt(trunk.path.length).x;
         const yPos = startRadius * Math.sin(i) + trunk.path.getPointAt(trunk.path.length).y;
 
@@ -502,7 +514,7 @@ class RelationshipCanvas extends Component {
           starOrigin,
           {
             baseRadius: size * this.radius,
-            radius: 8,
+            radius: this.radius,
             skipOne: false,
             outer: false,
             inner: false,
@@ -510,7 +522,7 @@ class RelationshipCanvas extends Component {
             startRadians: 0,
             radianLimit: 2 * Math.PI,
             color,
-          }, { x: 14 * this.radius, y: 0 }
+          }, { x: this.radius * Math.min(this.props.data[0] * 6 + 2, 14 ), y: 0 }
         ).init();
 
         starCircle.draw();
@@ -544,8 +556,8 @@ class RelationshipCanvas extends Component {
     if (Paper !== undefined) {
       this.relationshipCanvasScope.project.activeLayer.removeChildren();
       // this.radius = this.relationshipCanvasScope.view.viewSize;
-      this.radius = this.relationshipCanvasScope.view.viewSize.width / 500;
-      console.log(this.relationshipCanvasScope.view.viewSize.width)
+      this.radius = this.relationshipCanvasScope.view.viewSize.width / 250;
+      // console.log(this.relationshipCanvasScope.view.viewSize.width)
       this.drawTree(new Paper.Point(this.radius, this.relationshipCanvasScope.view.center.y));
       // this.drawOriginCountryData(new Paper.Point(0, 200));
       for (let i = 0; i < 2; i++) {
@@ -562,7 +574,7 @@ class RelationshipCanvas extends Component {
         const posX = (i  % 2 !== 0) ? 18 : 18 ;
 
         // this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, 51 * this.radius), i);
-        // this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2, this.radius * 2), i);
+        this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2, this.radius * 2 + 10 * this.radius), i);
 
       }
 
@@ -592,14 +604,14 @@ class RelationshipCanvas extends Component {
 
         this.drawTree(new Paper.Point(this.radius, this.relationshipCanvasScope.view.center.y));
 
-        // for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 7; i++) {
 
-        //   const posX = (i  % 2 !== 0) ? 18 : 18 ;
+          const posX = (i  % 2 !== 0) ? 18 : 18 ;
 
         //   this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, 51 * this.radius), i);
-        //   this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2, this.radius * 2), i);
+          this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2 , this.radius * 2 + 10 * this.radius), i);
 
-        // }
+        }
 
       }
     }
@@ -609,7 +621,7 @@ class RelationshipCanvas extends Component {
       this.relationshipCanvasScope.view.draw();
     }
     return (
-        <canvas className=' ' ref={this.workRef} {...this.props} id="workcanvas" resize='true'/>
+        <canvas className=' ' ref={this.workRef} {...this.props} id="relcanvas" resize='true'/>
     )
   }
 }

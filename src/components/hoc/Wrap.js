@@ -341,8 +341,8 @@ componentWillMount() {
           : '' }
         {/*  svgOut={(svgdata) => this.handleSVG(svgdata)}  */}
         { (this.state.sections[this.state.currentSection] !== undefined) ?
-          <div className="canvases w-1/2 h-full flex flex-row flex-wrap relative">
-            <NewCanvas
+          <div className="canvases w-3/4 h-full flex flex-row flex-wrap relative">
+            {/* <NewCanvas
               className={'w-full h-96 origin-top-left'}
               origin={this.state.origin}
               residence={this.state.residence}
@@ -351,9 +351,9 @@ componentWillMount() {
               questionvalues={this.state.sections[this.state.currentSection].questionValues}
               width="100%"
               height="auto"
-              stitch='x' />
+              stitch='x' /> */}
             <LivingCanvas
-                className={'h-100 w-full'}
+                className={'h-80 w-full'}
                 origin={this.state.origin}
                 residence={this.state.residence}
                 colors={this.palettes}
@@ -364,7 +364,7 @@ componentWillMount() {
                 height="auto"
                 stitch='x' />
             <WorkCanvas
-              className={' h-100 w-full'}
+              className={' h-80 w-full'}
               origin={this.state.origin}
               residence={this.state.residence}
               colors={this.palettes}
@@ -374,7 +374,7 @@ componentWillMount() {
               height="auto"
               stitch='x' />
              <RelationshipCanvas
-              className={'h-100 w-full'}
+              className={'h-96 w-full'}
               origin={this.state.origin}
               residence={this.state.residence}
               colors={this.palettes}
