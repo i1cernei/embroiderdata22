@@ -7,6 +7,7 @@ import RelationshipCanvas from "../canvas/RelationshipCanvas";
 import LivingCanvas from "../canvas/LivingCanvas";
 import HomeCanvas from "../canvas/HomeCanvas";
 import PartnerCanvas from "../canvas/PartnerCanvas";
+import SymbolInner from '../Symbol/SymbolInner';
 import { SocketContext } from '../../context/socket';
 
 class Wrap extends Component {
@@ -26,6 +27,8 @@ class Wrap extends Component {
       sections: [],
       currentSection: 0,
       svg: '',
+      pattern: false,
+      rotate: false,
     };
 
     this.initResetTimeout = '';
@@ -367,6 +370,14 @@ class Wrap extends Component {
       }.bind(this), 5 * 60 * 1000)
     }
 
+    this.handleBackToInterface = () => {
+      this.setState({ pattern: false, currentQuestion: 0, currentSection: 0 });
+    }
+
+    this.handleSeePattern = () => {
+      this.setState({ pattern: true });
+    }
+
     this.sectionNav = (sectionNavData) => {
       if (sectionNavData === 'next') {
         if ((this.state.currentSection + 1) > this.state.sections.length - 1) {
@@ -386,6 +397,7 @@ class Wrap extends Component {
 
     this.questionChange.bind(this);
   }
+
 
 
   componentDidCatch(error, errorInfo) {
@@ -494,106 +506,115 @@ componentWillMount() {
     }
 
   render() {
+    let content = (
+      <div className="wrap max-w-full flex flex-row flex-nowrap gap-x-12 relative items-start bg-gray-600">
 
-    return (
-      <div className="wrap max-w-full flex flex-row flex-nowrap gap-x-12 relative items-start">
-        {
-            this.state.sections[this.state.currentSection] !== undefined
-             ?
-        <Questions
-          data={this.state.sections[this.state.currentSection].data}
-          countries={this.state.countries}
-          changeHandle={(e, index) => this.questionChange(e, index)}
-          changeCountryHandle={(e) => this.countryChange(e)}
-          changeJobHandle={(value, index, jobs) => this.jobChange(value, index, jobs)}
-          questionNav={(navdata) => this.questionNav(navdata)}
-          sectionNav={(sectionnavdata) => this.sectionNav(sectionnavdata)}
-          currentQuestion={this.state.currentQuestion}
-              sections={this.state.sections}
-              currentSection={this.state.currentSection}
-              questionvalues={this.state.sections[0].questionValues}
-              // livingdata={this.state.sections[0].questionValues}
-              origin={this.state.origin}
-              residence={this.state.residence} svg={this.svg}
-          ></Questions>
-          : '' }
-        {/*  svgOut={(svgdata) => this.handleSVG(svgdata)}  */}
-        { (this.state.sections[this.state.currentSection] !== undefined) ?
-          <div className="canvases w-1/2 h-full flex flex-col flex-wrap relative justify-center items-center min-h-screen">
-            {/* <NewCanvas
-              className={'w-full h-96 origin-top-left'}
-              origin={this.state.origin}
-              residence={this.state.residence}
-              livingdata={this.state.sections[0].questionValues}
-              sections={this.state.sections}
-              questionvalues={this.state.sections[this.state.currentSection].questionValues}
-              width="100%"
-              height="auto"
-              stitch='x' /> */}
-            {this.state.currentSection === 0 ?
-              <LivingCanvas
-              className={'h-80 w-full'}
-              origin={this.state.origin}
-              residence={this.state.residence}
-              colors={this.palettes}
-              data={this.state.sections[0] !== undefined ? this.state.sections[0].questionValues : [0, 0, 0, 0, 0, 0, 0]}
-              sections={this.state.sections}
-              questionvalues={this.state.sections[this.state.currentSection].questionValues}
-              width="100%"
-              height="auto"
-                stitch='x' />
-              : ''}
-            {this.state.currentSection === 0 ?
-              <HomeCanvas
-              className={'h-80 w-full'}
-              origin={this.state.origin}
-              residence={this.state.residence}
-              colors={this.palettes}
-              data={this.state.sections[0] !== undefined ? this.state.sections[0].questionValues : [0, 0, 0, 0, 0, 0, 0]}
-              sections={this.state.sections}
-              questionvalues={this.state.sections[this.state.currentSection].questionValues}
-              width="100%"
-              height="auto"
+      {
+          this.state.sections[this.state.currentSection] !== undefined
+           ?
+      <Questions seePattern = {this.handleSeePattern}
+        data={this.state.sections[this.state.currentSection].data}
+        countries={this.state.countries}
+        changeHandle={(e, index) => this.questionChange(e, index)}
+        changeCountryHandle={(e) => this.countryChange(e)}
+        changeJobHandle={(value, index, jobs) => this.jobChange(value, index, jobs)}
+        questionNav={(navdata) => this.questionNav(navdata)}
+        sectionNav={(sectionnavdata) => this.sectionNav(sectionnavdata)}
+        currentQuestion={this.state.currentQuestion}
+            sections={this.state.sections}
+            currentSection={this.state.currentSection}
+            questionvalues={this.state.sections[0].questionValues}
+            // livingdata={this.state.sections[0].questionValues}
+            origin={this.state.origin}
+            residence={this.state.residence} svg={this.svg}
+        ></Questions>
+        : '' }
+      {/*  svgOut={(svgdata) => this.handleSVG(svgdata)}  */}
+      { (this.state.sections[this.state.currentSection] !== undefined) ?
+        <div className="canvases w-1/2 h-full flex flex-col flex-wrap relative justify-center items-center min-h-screen bg-zinc-700 pl-4 pr-4">
+          {/* <NewCanvas
+            className={'w-full h-96 origin-top-left'}
+            origin={this.state.origin}
+            residence={this.state.residence}
+            livingdata={this.state.sections[0].questionValues}
+            sections={this.state.sections}
+            questionvalues={this.state.sections[this.state.currentSection].questionValues}
+            width="100%"
+            height="auto"
+            stitch='x' /> */}
+          {this.state.currentSection === 0 ?
+            <LivingCanvas
+            className={'h-80 w-full'}
+            origin={this.state.origin}
+            residence={this.state.residence}
+            colors={this.palettes}
+            data={this.state.sections[0] !== undefined ? this.state.sections[0].questionValues : [0, 0, 0, 0, 0, 0, 0]}
+            sections={this.state.sections}
+            questionvalues={this.state.sections[this.state.currentSection].questionValues}
+            width="100%"
+            height="auto"
               stitch='x' />
-              : ''}
-            {this.state.currentSection === 1 ?
-              <WorkCanvas
-              className={' h-80 w-full'}
-              origin={this.state.origin}
-              residence={this.state.residence}
-              colors={this.palettes}
-              data={this.state.sections[1] !== undefined ? this.state.sections[1].questionValues : [0,0,0,0,0,0,0] }
-              sections={this.state.sections}
-              width="100%"
-              height="auto"
-                stitch='x' />
-              : ''}
-            {this.state.currentSection === 2 ?
-              <PartnerCanvas
-              className={' h-72 w-full'}
-              origin={this.state.origin}
-              residence={this.state.residence}
-              colors={this.palettes}
-              data={this.state.sections[2] !== undefined ? this.state.sections[2].questionValues : [1, 0, 0, 0, 0, 0, 0]}
-              sections={this.state.sections}
-              width="100%"
-              height="auto"
+            : ''}
+          {this.state.currentSection === 0 ?
+            <HomeCanvas
+            className={'h-80 w-full'}
+            origin={this.state.origin}
+            residence={this.state.residence}
+            colors={this.palettes}
+            data={this.state.sections[0] !== undefined ? this.state.sections[0].questionValues : [0, 0, 0, 0, 0, 0, 0]}
+            sections={this.state.sections}
+            questionvalues={this.state.sections[this.state.currentSection].questionValues}
+            width="100%"
+            height="auto"
+            stitch='x' />
+            : ''}
+          {this.state.currentSection === 1 ?
+            <WorkCanvas
+            className={' h-80 w-full'}
+            origin={this.state.origin}
+            residence={this.state.residence}
+            colors={this.palettes}
+            data={this.state.sections[1] !== undefined ? this.state.sections[1].questionValues : [0,0,0,0,0,0,0] }
+            sections={this.state.sections}
+            width="100%"
+            height="auto"
               stitch='x' />
-              : ''}
-            {this.state.currentSection === 2 ?
-              <RelationshipCanvas
-              className={'h-72 w-full -mt-20'}
-              origin={this.state.origin}
-              residence={this.state.residence}
-              colors={this.palettes}
-              data={this.state.sections[2] !== undefined ? this.state.sections[2].questionValues : [1,0,0,0,0,0,0] }
-              sections={this.state.sections}
-              width="100%"
-              height="auto"
-              stitch='x' /> : ''}
-          </div>
-          : ''}
+            : ''}
+          {this.state.currentSection === 2 ?
+            <PartnerCanvas
+            className={' h-72 w-full'}
+            origin={this.state.origin}
+            residence={this.state.residence}
+            colors={this.palettes}
+            data={this.state.sections[2] !== undefined ? this.state.sections[2].questionValues : [1, 0, 0, 0, 0, 0, 0]}
+            sections={this.state.sections}
+            width="100%"
+            height="auto"
+            stitch='x' />
+            : ''}
+          {this.state.currentSection === 2 ?
+            <RelationshipCanvas
+            className={'h-72 w-full -mt-20'}
+            origin={this.state.origin}
+            residence={this.state.residence}
+            colors={this.palettes}
+            data={this.state.sections[2] !== undefined ? this.state.sections[2].questionValues : [1,0,0,0,0,0,0] }
+            sections={this.state.sections}
+            width="100%"
+            height="auto"
+            stitch='x' /> : ''}
         </div>
+        : ''}
+      </div>
+    )
+
+    if (this.state.pattern) {
+      content = (
+        <SymbolInner states={this.state} backToInterface={this.handleBackToInterface}/>
+      );
+    }
+    return (
+      content
     )
   }
 }

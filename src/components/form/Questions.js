@@ -72,8 +72,8 @@ class Questions extends Component {
               >
               </Question> : ''}
           </ul>
-          <QuestionNav questionNav={(navdata) => this.props.questionNav(navdata)} ></QuestionNav>
-          <SectionNav className="w-full" currentQuestion={this.props.currentQuestion} sections={this.props.sections} currentSection={this.props.currentSection}  sectionNav={(navdata) => this.props.sectionNav(navdata)} ></SectionNav>
+          <QuestionNav questionNav={(navdata) => this.props.questionNav(navdata)} currentQuestion={this.props.currentQuestion} sections={this.props.sections} currentSection={this.props.currentSection}></QuestionNav>
+          <SectionNav className="w-full" currentQuestion={this.props.currentQuestion} sections={this.props.sections} currentSection={this.props.currentSection}  sectionNav={(navdata) => this.props.sectionNav(navdata)} seePattern={() => this.props.seePattern()} ></SectionNav>
           {/* <p className=' max-w-lg'>{JSON.stringify(this.props.origin)}</p> */}
 
 

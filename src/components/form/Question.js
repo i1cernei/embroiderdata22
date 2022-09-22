@@ -157,7 +157,7 @@ class Question extends Component {
     //   input = (<input type='number' value="0"></input>);
     // }
     return (
-      <li key={this.props.index} className='border rounded-xl w-full p-16 flex-col gap-y-6 drop-shadow-sm h-96'>
+      <li key={this.props.index} className='border rounded-xl w-full p-16 flex-col gap-y-6 drop-shadow-sm h-96 bg-gray-200'>
          <div className="question_body w-full text-left text-2xl font-bold">
                   <p className="mb-8">{this.props.acf.question_body}</p>
                   </div>
