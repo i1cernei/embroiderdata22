@@ -5,8 +5,13 @@ import NewCanvas from "../canvas/NewCanvas";
 import WorkCanvas from "../canvas/WorkCanvas";
 import RelationshipCanvas from "../canvas/RelationshipCanvas";
 import LivingCanvas from "../canvas/LivingCanvas";
+import HomeCanvas from "../canvas/HomeCanvas";
+import PartnerCanvas from "../canvas/PartnerCanvas";
+import { SocketContext } from '../../context/socket';
 
 class Wrap extends Component {
+  static contextType = SocketContext;
+
   constructor(props) {
     super(props)
 
@@ -22,6 +27,155 @@ class Wrap extends Component {
       currentSection: 0,
       svg: '',
     };
+
+    this.initResetTimeout = '';
+
+    // this.initialState = `{
+    //   "data": [],
+    //   "questionValues": [
+    //     "{country: \"Andorra\", cultural_group: \"southern\", gd…}",
+    //     "{country: \"Brazil\", cultural_group: \"mestizo\", gdp:…}"
+    //   ],
+    //   "currentQuestion": 5,
+    //   "countries": [
+    //     "{country: \"Åland Islands (Finland)\", cultural_group…}",
+    //     "{country: \"Albania\", cultural_group: \"southeastern\"…}",
+    //     "{country: \"Andorra\", cultural_group: \"southern\", gd…}",
+    //     "{country: \"Antigua and Barbuda\", cultural_group: \"c…}",
+    //     "{country: \"Argentina\", cultural_group: \"iberoameric…}",
+    //     "{country: \"Armenia\", cultural_group: \"caucasus\", gd…}",
+    //     "{country: \"Austria\", cultural_group: \"central\", gdp…}",
+    //     "{country: \"Azerbaijan\", cultural_group: \"caucasus\",…}",
+    //     "{country: \"Belarus\", cultural_group: \"eastern\", gdp…}",
+    //     "{country: \"Belgium\", cultural_group: \"western\", gdp…}",
+    //     "{country: \"Bolivia\", cultural_group: \"indoamerican\"…}",
+    //     "{country: \"Bosnia and Herzegovina\", cultural_group:…}",
+    //     "{country: \"Brazil\", cultural_group: \"mestizo\", gdp:…}",
+    //     "{country: \"Bulgaria\", cultural_group: \"southeastern…}",
+    //     "{country: \"Canada\", cultural_group: \"western\", gdp:…}",
+    //     "{country: \"Chile\", cultural_group: \"mestizo\", gdp: …}",
+    //     "{country: \"Colombia\", cultural_group: \"iberoamerica…}",
+    //     "{country: \"Costa Rica\", cultural_group: \"mestizo\", …}",
+    //     "{country: \"Croatia\", cultural_group: \"central\", gdp…}",
+    //     "{country: \"Cuba\", cultural_group: \"iberoamerican\", …}",
+    //     "{country: \"Cyprus\", cultural_group: \"southeastern\",…}",
+    //     "{country: \"Czech Republic\", cultural_group: \"centra…}",
+    //     "{country: \"Denmark\", cultural_group: \"northern\", gd…}",
+    //     "{country: \"Dominican Republic\", cultural_group: \"me…}",
+    //     "{country: \"Ecuador\", cultural_group: \"southern\", gd…}",
+    //     "{country: \"El Salvador\", cultural_group: \"creole\", …}",
+    //     "{country: \"Estonia\", cultural_group: \"baltic\", gdp:…}",
+    //     "{country: \"Faroe Islands (Denmark)\", cultural_group…}",
+    //     "{country: \"Finland\", cultural_group: \"northern\", gd…}",
+    //     "{country: \"France\", cultural_group: \"western\", gdp:…}",
+    //     "{country: \"French Guiana\", cultural_group: \"western…}",
+    //     "{country: \"Georgia\", cultural_group: \"caucasus\", gd…}",
+    //     "{country: \"Germany\", cultural_group: \"central\", gdp…}",
+    //     "{country: \"Gibraltar (UK)\", cultural_group: \"wester…}",
+    //     "{country: \"Greece\", cultural_group: \"southeastern\",…}",
+    //     "{country: \"Guadeloupe (France)\", cultural_group: \"w…}",
+    //     "{country: \"Guatemala\", cultural_group: \"indoamerica…}",
+    //     "{country: \"Guernsey (UK)\", cultural_group: \"western…}",
+    //     "{country: \"Haiti\", cultural_group: \"creole\", gdp: \"…}",
+    //     "{country: \"Honduras\", cultural_group: \"creole\", gdp…}",
+    //     "{country: \"Hungary\", cultural_group: \"central\", gdp…}",
+    //     "{country: \"Iceland\", cultural_group: \"northern\", gd…}",
+    //     "{country: \"Ireland\", cultural_group: \"western\", gdp…}",
+    //     "{country: \"Isle of Man (UK)\", cultural_group: \"west…}",
+    //     "{country: \"Italy\", cultural_group: \"southern\", gdp:…}",
+    //     "{country: \"Jersey (UK)\", cultural_group: \"western\",…}",
+    //     "{country: \"Kazakhstan\", cultural_group: \"eastern\", …}",
+    //     "{country: \"Kosovo\", cultural_group: \"southeastern\",…}",
+    //     "{country: \"Latvia\", cultural_group: \"baltic\", gdp: …}",
+    //     "{country: \"Liechtenstein\", cultural_group: \"central…}",
+    //     "{country: \"Lithuania\", cultural_group: \"baltic\", gd…}",
+    //     "{country: \"Luxembourg\", cultural_group: \"central\", …}",
+    //     "{country: \"Macedonia\", cultural_group: \"southeaster…}",
+    //     "{country: \"Malta\", cultural_group: \"southern\", gdp:…}",
+    //     "{country: \"Martinique (France)\", cultural_group: \"w…}",
+    //     "{country: \"Mexico\", cultural_group: \"mestizo\", gdp:…}",
+    //     "{country: \"Moldova\", cultural_group: \"southeastern\"…}",
+    //     "{country: \"Monaco\", cultural_group: \"western\", gdp:…}",
+    //     "{country: \"Montenegro\", cultural_group: \"southeaste…}",
+    //     "{country: \"Netherlands\", cultural_group: \"western\",…}",
+    //     "{country: \"Nicaragua\", cultural_group: \"mestizo\", g…}",
+    //     "{country: \"Norway\", cultural_group: \"northern\", gdp…}",
+    //     "{country: \"Panama\", cultural_group: \"mestizo\", gdp:…}",
+    //     "{country: \"Paraguay\", cultural_group: \"mestizo\", gd…}",
+    //     "{country: \"Peru\", cultural_group: \"indoamerican\", g…}",
+    //     "{country: \"Poland\", cultural_group: \"central\", gdp:…}",
+    //     "{country: \"Portugal\", cultural_group: \"southern\", g…}",
+    //     "{country: \"Puerto Rico\", cultural_group: \"western\",…}",
+    //     "{country: \"Romania\", cultural_group: \"southeastern\"…}",
+    //     "{country: \"Russia\", cultural_group: \"eastern\", gdp:…}",
+    //     "{country: \"Saint Barthélemy (France)\", cultural_gro…}",
+    //     "{country: \"Saint Kitts and Nevis\", cultural_group: …}",
+    //     "{country: \"Saint Lucia\", cultural_group: \"southern\"…}",
+    //     "{country: \"Saint Martin (France)\", cultural_group: …}",
+    //     "{country: \"Saint Vincent and the Grenadines\", cultu…}",
+    //     "{country: \"San Marino\", cultural_group: \"southern\",…}",
+    //     "{country: \"Serbia\", cultural_group: \"southeastern\",…}",
+    //     "{country: \"Slovakia\", cultural_group: \"central\", gd…}",
+    //     "{country: \"Slovenia\", cultural_group: \"central\", gd…}",
+    //     "{country: \"Spain\", cultural_group: \"southern\", gdp:…}",
+    //     "{country: \"Suriname\", cultural_group: \"creole\", gdp…}",
+    //     "{country: \"Svalbard and Jan Mayen(Norway)\", cultura…}",
+    //     "{country: \"Sweden\", cultural_group: \"northern\", gdp…}",
+    //     "{country: \"Switzerland\", cultural_group: \"central\",…}",
+    //     "{country: \"The Bahamas\", cultural_group: \"creole\", …}",
+    //     "{country: \"Trinidad and Tobago\", cultural_group: \"c…}",
+    //     "{country: \"Turkey\", cultural_group: \"caucasus\", gdp…}",
+    //     "{country: \"Ukraine\", cultural_group: \"eastern\", gdp…}",
+    //     "{country: \"United Kingdom\", cultural_group: \"wester…}",
+    //     "{country: \"United States of America\", cultural_grou…}",
+    //     "{country: \"Uruguay\", cultural_group: \"southern\", gd…}",
+    //     "{country: \"Vatican City\", cultural_group: \"southern…}",
+    //     "{country: \"Venezuela\", cultural_group: \"iberoameric…}"
+    //   ],
+    //   "origin": {
+    //     "country": "Andorra",
+    //     "population": "78000",
+    //     "perc_continent_pop": "0.01",
+    //     "minority_percent": "51",
+    //     "minorities": "4",
+    //     "cultural_group": "southern",
+    //     "gdp": "4800"
+    //   },
+    //   "residence": {
+    //     "country": "Brazil",
+    //     "population": "204519000",
+    //     "perc_continent_pop": "33.07",
+    //     "minority_percent": "33.1",
+    //     "minorities": "12",
+    //     "cultural_group": "mestizo",
+    //     "gdp": "3259000"
+    //   },
+    //   sections: [
+    //     "{data: Array(9), description: \"This is the living a…}",
+    //     "{data: Array(5), description: \"This the work and ed…}",
+    //     "{data: Array(6), description: \"This is the social a…}"
+    //   ],
+    //   currentSection: 2,
+    //   "currentSection": 2,
+    //   "cultures": [
+    //     "northern",
+    //     "southeastern",
+    //     "southern",
+    //     "creole",
+    //     "iberoamerican",
+    //     "caucasus",
+    //     "central",
+    //     "eastern",
+    //     "western",
+    //     "indoamerican",
+    //     "mestizo",
+    //     "baltic"
+    //   ],
+
+    //   "svg": ""
+    // }`;
+
+
 
     this.palettes = {
       northern: [
@@ -119,16 +273,18 @@ class Wrap extends Component {
     }
 
     this.svg = '';
+    this.socket = this.context;
 
     this.questionChange = (event, index) => {
-      console.log(event.target.value, index);
+      // console.log(event.target.value, index);
 
       const currentSections = this.state.sections;
       const currentValues = this.state.sections[this.state.currentSection].questionValues;
       currentValues[index] = Number(event.target.value);
       currentSections[this.state.currentSection].questionValues = currentValues;
 
-      this.setState({sections: currentSections})
+      this.setState({ sections: currentSections })
+
       // console.log(`Question ${index} has changed value to${value}`);
     }
 
@@ -139,7 +295,7 @@ class Wrap extends Component {
       const currentSections = this.state.sections;
       const currentValues = this.state.sections[this.state.currentSection].questionValues;
       currentValues[index] = [value, jobs];
-      console.log('Jobs: ', jobs);
+      // console.log('Jobs: ', jobs);
       currentSections[this.state.currentSection].questionValues = currentValues;
 
 
@@ -154,7 +310,7 @@ class Wrap extends Component {
     }
 
     this.countryChange = (event, index) => {
-      console.log(this.state.countries[event.target.value]);
+      // console.log(this.state.countries[event.target.value]);
       const currentValues = this.state.questionValues;
       currentValues[this.state.currentQuestion] = this.state.countries[event.target.value];
 
@@ -200,7 +356,15 @@ class Wrap extends Component {
         } else {
           this.setState({ currentQuestion: this.state.currentQuestion - 1 })
           }
-        }
+      }
+
+      if (this.initResetTimeout) {
+        clearTimeout(this.initResetTimeout);
+      }
+
+      this.initResetTimeout = setTimeout( function () {
+        this.setState({currentSection: 0, currentQuestion: 0})
+      }.bind(this), 5 * 60 * 1000)
     }
 
     this.sectionNav = (sectionNavData) => {
@@ -229,6 +393,19 @@ class Wrap extends Component {
     console.log(error, errorInfo);
   }
 
+  componentDidUpdate() {
+    // const socket = this.context;
+    // this.props.socket.emit('newData', this.state );
+    const sockets = this.context;
+    sockets.emit('newData', this.state);
+  }
+
+  componentDidMount() {
+    const sockets = this.context;
+    console.log('socket: ', sockets);
+    // this.props.socket.emit('newData', this.state );
+  }
+
 componentWillMount() {
     // let result = {};
       let localData = '';
@@ -238,7 +415,8 @@ componentWillMount() {
   const sections = [];
   const descriptions = [];
 
-
+  // const initialState = JSON.parse(this.initialState);
+  // this.setState({ ...initialState });
 
   const sectionData = [];
 
@@ -341,7 +519,7 @@ componentWillMount() {
           : '' }
         {/*  svgOut={(svgdata) => this.handleSVG(svgdata)}  */}
         { (this.state.sections[this.state.currentSection] !== undefined) ?
-          <div className="canvases w-3/4 h-full flex flex-row flex-wrap relative">
+          <div className="canvases w-1/2 h-full flex flex-col flex-wrap relative justify-center items-center min-h-screen">
             {/* <NewCanvas
               className={'w-full h-96 origin-top-left'}
               origin={this.state.origin}
@@ -352,18 +530,34 @@ componentWillMount() {
               width="100%"
               height="auto"
               stitch='x' /> */}
-            <LivingCanvas
-                className={'h-80 w-full'}
-                origin={this.state.origin}
-                residence={this.state.residence}
-                colors={this.palettes}
-                data={this.state.sections[0] !== undefined ? this.state.sections[0].questionValues : [0,0,0,0,0,0,0] }
-                sections={this.state.sections}
-                questionvalues={this.state.sections[this.state.currentSection].questionValues}
-                width="100%"
-                height="auto"
+            {this.state.currentSection === 0 ?
+              <LivingCanvas
+              className={'h-80 w-full'}
+              origin={this.state.origin}
+              residence={this.state.residence}
+              colors={this.palettes}
+              data={this.state.sections[0] !== undefined ? this.state.sections[0].questionValues : [0, 0, 0, 0, 0, 0, 0]}
+              sections={this.state.sections}
+              questionvalues={this.state.sections[this.state.currentSection].questionValues}
+              width="100%"
+              height="auto"
                 stitch='x' />
-            <WorkCanvas
+              : ''}
+            {this.state.currentSection === 0 ?
+              <HomeCanvas
+              className={'h-80 w-full'}
+              origin={this.state.origin}
+              residence={this.state.residence}
+              colors={this.palettes}
+              data={this.state.sections[0] !== undefined ? this.state.sections[0].questionValues : [0, 0, 0, 0, 0, 0, 0]}
+              sections={this.state.sections}
+              questionvalues={this.state.sections[this.state.currentSection].questionValues}
+              width="100%"
+              height="auto"
+              stitch='x' />
+              : ''}
+            {this.state.currentSection === 1 ?
+              <WorkCanvas
               className={' h-80 w-full'}
               origin={this.state.origin}
               residence={this.state.residence}
@@ -372,9 +566,23 @@ componentWillMount() {
               sections={this.state.sections}
               width="100%"
               height="auto"
+                stitch='x' />
+              : ''}
+            {this.state.currentSection === 2 ?
+              <PartnerCanvas
+              className={' h-72 w-full'}
+              origin={this.state.origin}
+              residence={this.state.residence}
+              colors={this.palettes}
+              data={this.state.sections[2] !== undefined ? this.state.sections[2].questionValues : [1, 0, 0, 0, 0, 0, 0]}
+              sections={this.state.sections}
+              width="100%"
+              height="auto"
               stitch='x' />
-             <RelationshipCanvas
-              className={'h-96 w-full'}
+              : ''}
+            {this.state.currentSection === 2 ?
+              <RelationshipCanvas
+              className={'h-72 w-full -mt-20'}
               origin={this.state.origin}
               residence={this.state.residence}
               colors={this.palettes}
@@ -382,7 +590,7 @@ componentWillMount() {
               sections={this.state.sections}
               width="100%"
               height="auto"
-              stitch='x' />
+              stitch='x' /> : ''}
           </div>
           : ''}
         </div>

@@ -1,0 +1,4 @@
+a_player startup command
+chromium   --class="player" --window-position=-1920,0 -kiosk http://localhost:4001/player
+kinointerface startup command 
+chromium --user-data-dir=/home/blackandfield/PlayerInterface --profile-directory="Profile 1" --class="interface" --window-position=-0,0 -kiosk http://localhost:4001/interface

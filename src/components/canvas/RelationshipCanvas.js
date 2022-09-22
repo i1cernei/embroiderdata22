@@ -37,6 +37,7 @@ class RelationshipCanvas extends Component {
     }
 
     this.relationshipCanvasScope = new Paper.PaperScope();
+    this.width = 100;
 
     this.radius = 4;
     this.palettes = {
@@ -226,24 +227,11 @@ class RelationshipCanvas extends Component {
             oddOnly: false,
             startRadians: 0,
             radianLimit: Math.PI,
-            color: this.originColors !== undefined ? this.originColors[3] : '#b5b3a7',
-          }, { x: o/2 * this.radius * limit , y: 0 }
+            color: this.residenceColors !== undefined ? this.residenceColors[2] : '#b5b3a7',
+          }, { x: 70 +  o/2 * this.radius * limit , y: 0 }
         ).init();
 
-        const smallTriangle = new CircleDiamond(
-          origin,
-          {
-            baseRadius: (size/2 + 1 + this.props.data[2] / 6) * this.radius,
-            radius: this.radius,
-            skipOne: false,
-            outer: false,
-            inner: false,
-            oddOnly: false,
-            startRadians: Math.PI,
-            radianLimit: 2 * Math.PI,
-            color: this.originColors !== undefined ? this.originColors[3] : '#b5b3a7',
-          }, { x: 5 * o / 2 * this.radius * limit , y: - (size/6  + this.props.data[2] / 6) * this.radius }
-        ).init();
+
 
         const lowerTriangle = new CircleDiamond(
           origin,
@@ -256,21 +244,107 @@ class RelationshipCanvas extends Component {
             oddOnly: false,
             startRadians: Math.PI,
             radianLimit: 2 * Math.PI,
-            color: this.originColors !== undefined ? this.originColors[3] : '#b5b3a7',
-          }, { x: o/2  * this.radius * limit , y: (size + 1 + this.props.data[2] / 2) * this.radius }
+            color: this.residenceColors !== undefined ? this.residenceColors[0] : '#b5b3a7',
+          }, { x:70 + o/2  * this.radius * limit , y: (size + 1 + this.props.data[2] / 2) * this.radius }
         ).init();
 
         upperTriangle.draw();
-        smallTriangle.draw();
         lowerTriangle.draw();
       }
 
     }
 
-    this.drawTree = (origin, index = 0) => {
-      const trunkL = this.props.data[1] > 0 ? Math.max(Math.min(this.props.data[1] / 2 * 5, 200), 70) : 200;
+    this.drawChildren = (origin) => {
+      const size = 10;
 
-      const trunk = new StitchPath(this.radius, this.relationshipCanvasScope, origin, new Paper.Point(origin.x + this.radius * trunkL, origin.y), 'x', this.originColors !== undefined ? this.originColors[1] : '#b5b3a7');
+      for (let o = 0; o < this.props.data[5]; o++)
+        {
+          const smallTriangle = new CircleDiamond(
+            origin,
+            {
+              baseRadius: size * this.radius,
+              radius: this.radius,
+              skipOne: false,
+              outer: false,
+              inner: false,
+              oddOnly: false,
+              startRadians: Math.PI,
+              radianLimit: 2 * Math.PI,
+              color: this.originColors !== undefined ? this.originColors[3] : '#b5b3a7',
+            },
+            // { x: 5 * o / 3 * this.radius * limit, y: - (size / 6 + this.props.data[2] / 6) * this.radius }
+            { x:o * this.radius * size , y: 0}
+          ).init();
+
+          const pointDiamond = new CircleDiamond(
+            origin,
+            {
+              baseRadius: 3 * this.radius,
+              radius: this.radius,
+              skipOne: false,
+              outer: false,
+              inner: false,
+              oddOnly: false,
+              startRadians: 0,
+              radianLimit: 2 * Math.PI,
+              color: this.originColors !== undefined ? this.originColors[2] : '#b5b3a7',
+            },
+            // { x: 5 * o / 3 * this.radius * limit, y: - (size / 6 + this.props.data[2] / 6) * this.radius }
+            { x:o * this.radius * size , y: size * this.radius - 12 * this.radius}
+          ).init();
+
+          pointDiamond.draw();
+
+          smallTriangle.draw();
+      }
+
+      for (let o = 0; o < this.props.data[5]; o++)
+      {
+        const smallTriangle = new CircleDiamond(
+          origin,
+          {
+            baseRadius: size * this.radius,
+            radius: this.radius,
+            skipOne: false,
+            outer: false,
+            inner: false,
+            oddOnly: false,
+            startRadians: 0,
+            radianLimit: Math.PI,
+            color: this.originColors !== undefined ? this.originColors[3] : '#b5b3a7',
+          },
+          // { x: 5 * o / 3 * this.radius * limit, y: - (size / 6 + this.props.data[2] / 6) * this.radius }
+          { x:o * this.radius * size , y: size * this.radius + 5 * this.radius}
+        ).init();
+
+        const pointDiamond = new CircleDiamond(
+          origin,
+          {
+            baseRadius: 3 * this.radius,
+            radius: this.radius,
+            skipOne: false,
+            outer: false,
+            inner: false,
+            oddOnly: false,
+            startRadians: 0,
+            radianLimit: 2 * Math.PI,
+            color: this.originColors !== undefined ? this.originColors[2] : '#b5b3a7',
+          },
+          // { x: 5 * o / 3 * this.radius * limit, y: - (size / 6 + this.props.data[2] / 6) * this.radius }
+          { x:o * this.radius * size , y: size * this.radius + 8 * this.radius}
+        ).init();
+
+        pointDiamond.draw();
+        smallTriangle.draw();
+      }
+
+    }
+
+    this.drawTree = (origin, index = 0) => {
+      // const trunkL = this.props.data[1] > 0 ? Math.max(Math.min(this.props.data[1] / 2 * 5, 200), 70) : 200;
+      const trunkL = this.relationshipCanvasScope.view.viewSize.width - this.props.data[1] * this.radius - 13;
+
+      const trunk = new StitchPath(this.radius, this.relationshipCanvasScope, origin, new Paper.Point(origin.x + trunkL, origin.y), 'x', this.originColors !== undefined ? this.originColors[1] : '#b5b3a7');
       trunk.draw()
 
 
@@ -299,10 +373,10 @@ class RelationshipCanvas extends Component {
         const _endPoint = branch.path.getPointAt(branch.path.length);
         const _endPointTo = new Paper.Point(_endPoint.x + length / 3, _endPoint.y);
 
-        const _endPointToTwo = new Paper.Point(_endPoint.x - length / 2,_endPoint.y - length / 2);
+        const _endPointToTwo = new Paper.Point(_endPoint.x, _endPoint.y );
 
         if (count % 2 === 0) {
-          _endPointToTwo.y = _endPoint.y + length / 2
+          _endPointToTwo.y = _endPoint.y;
           offset[1] = 1;
         }
 
@@ -406,7 +480,7 @@ class RelationshipCanvas extends Component {
             color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
           },
             {
-              x: offset[0] * this.radius * 3,
+              x: offset[0] * this.radius * 2,
               y: offset[1] * this.radius * 2,
             }, this.relationshipCanvasScope).init();
 
@@ -422,7 +496,7 @@ class RelationshipCanvas extends Component {
               color: this.residenceColors !== undefined ? this.residenceColors[3] : '#b5b3a7'
             },
               {
-                x: offset[0] * this.radius * 3,
+                x: offset[0] * this.radius * 2,
                 y: offset[1] * this.radius * 2,
               }, this.relationshipCanvasScope).init();
 
@@ -434,7 +508,7 @@ class RelationshipCanvas extends Component {
       }
 
       let miniCount = 0
-      for (let i = trunk.path.length / 20; i < trunkL * this.radius - trunk.path.length / 10; i += trunk.path.length / this.props.data[4] / 3  || 30) {
+      for (let i = trunk.path.length / 20; i < trunkL - trunk.path.length / 10; i += trunk.path.length / this.props.data[3] / 3  || 30) {
         const _pathPoint = trunk.path.getPointAt(i);
         let posX, posY;
 
@@ -551,12 +625,14 @@ class RelationshipCanvas extends Component {
     // window.addEventListener("resize", this.updateRadius);
 
     this.relationshipCanvasScope.setup(this.newCanvas);
+
     // this.canvasScope.activate();
     // console.log(this.props.questionvalues);
     if (Paper !== undefined) {
       this.relationshipCanvasScope.project.activeLayer.removeChildren();
       // this.radius = this.relationshipCanvasScope.view.viewSize;
-      this.radius = this.relationshipCanvasScope.view.viewSize.width / 250;
+      this.radius = this.relationshipCanvasScope.view.viewSize.width / 150;
+      this.width = this.relationshipCanvasScope.view.viewSize.width;
       // console.log(this.relationshipCanvasScope.view.viewSize.width)
       this.drawTree(new Paper.Point(this.radius, this.relationshipCanvasScope.view.center.y));
       // this.drawOriginCountryData(new Paper.Point(0, 200));
@@ -569,14 +645,22 @@ class RelationshipCanvas extends Component {
         // this.drawBorder(new Paper.Point( this.radius + i * this.radius * 35, 54 * this.radius));
       }
 
-      for (let i = 0; i < 5; i++) {
+      // for (let i = 0; i < 6; i++) {
 
-        const posX = (i  % 2 !== 0) ? 18 : 18 ;
+      //   const posX = (i  % 2 !== 0) ? 18 : 18 ;
 
-        // this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, 51 * this.radius), i);
-        this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2, this.radius * 2 + 10 * this.radius), i);
+      //   // this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, 51 * this.radius), i);
+      //   this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2, this.radius * 2 + 10 * this.radius), i);
 
-      }
+      // }
+
+
+      // const divide = this.props.data[5] > 0 ? this.props.data[5] : 1;
+      // const limit = this.width / (this.radius * 10 * divide) ;
+
+      // for (let i = 0; i < limit; i++ ) {
+      //   this.drawChildren(new Paper.Point(20 * this.radius + i * this.radius * 20 + i * this.radius * 10 * this.props.data[5], this.radius * 2 + 10 * this.radius));
+      // }
 
 
       // this.drawFirstSymbol(new Paper.Point(this.radius, 10 * this.radius));
@@ -604,15 +688,22 @@ class RelationshipCanvas extends Component {
 
         this.drawTree(new Paper.Point(this.radius, this.relationshipCanvasScope.view.center.y));
 
-        for (let i = 0; i < 7; i++) {
+/* Drawing the border of the graph. */
+        // for (let i = 0; i < 6; i++) {
 
-          const posX = (i  % 2 !== 0) ? 18 : 18 ;
+        //   const posX = (i  % 2 !== 0) ? 18 : 18 ;
 
-        //   this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, 51 * this.radius), i);
-          this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2 , this.radius * 2 + 10 * this.radius), i);
+        // //   this.drawBorderDown(new Paper.Point( i * this.radius * posX * 2, 51 * this.radius), i);
+        //   this.drawBorderUp(new Paper.Point( i * this.radius * posX * 2 , this.radius * 2 + 10 * this.radius), i);
 
-        }
+        // }
 
+        // const divide = this.props.data[5] > 0 ? this.props.data[5] : 1;
+        // const limit = this.width / (this.radius * 10 * divide) ;
+
+        // for (let i = 0; i < limit; i++ ) {
+        //   this.drawChildren(new Paper.Point(20 * this.radius + i * this.radius * 20 + i * this.radius * 10 * this.props.data[5], this.radius * 2 + 10 * this.radius));
+        // }
       }
     }
 

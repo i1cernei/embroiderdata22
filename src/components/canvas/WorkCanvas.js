@@ -44,7 +44,7 @@ class WorkCanvas extends Component {
 
     this.workCanvasScope = new Paper.PaperScope();
 
-    this.radius = 5.5;
+    this.radius = 3.5;
     this.palettes = {
       northern: [
         '#ffca00',
@@ -635,7 +635,7 @@ class WorkCanvas extends Component {
     // console.log(this.props.questionvalues);
     if (Paper !== undefined) {
       this.workCanvasScope.project.activeLayer.removeChildren();
-      this.radius = this.workCanvasScope.view.viewSize.width / 250;
+      this.radius = this.workCanvasScope.view.viewSize.width / 180;
       // this.drawOriginCountryData(new Paper.Point(0, 200));
       for (let i = 0; i < 3; i++) {
         // this.drawOriginCountryData(new Paper.Point(i * this.originMax * this.radius + this.originMax * this.radius* i , this.radius * this.originMax / 2 ), this.canvasScope);

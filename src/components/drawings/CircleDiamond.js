@@ -58,8 +58,9 @@ export class CircleDiamond {
       // path.strokeWidth = 10;
       // path.strokeColor = new Paper.Color('black');
 
-      this.paths.push(path);
+
       let count = 0;
+      this.paths.push(path);
 
       for (let i = 0; i < path.length; i += Math.sqrt(2 * (this.config.radius ** 2))) {
         const _thePoint = path.getPointAt(i);
@@ -101,6 +102,8 @@ export class CircleDiamond {
 
             this.stitches.push(thirdStitch);
           }
+
+
         }
 
         count++;

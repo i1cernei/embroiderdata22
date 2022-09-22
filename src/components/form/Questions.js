@@ -32,9 +32,9 @@ class Questions extends Component {
 
       return (
         <div className='formQuestions max-w-screen-md flex shrink flex-col items-start justify-center relative w-1/2'>
-           <SectionNav className="w-full" currentQuestion={this.props.currentQuestion} sections={this.props.sections} currentSection={this.props.currentSection}  sectionNav={(navdata) => this.props.sectionNav(navdata)} ></SectionNav>
+
         {/* <BannerCanvas origin={this.props.origin} residence={this.props.residence} resize="false" questionvalues={this.props.questionvalues} className='bannerCanvas relative h-64 ml-12 top-0' stitch='x' /> */}
-          <header className='mb-8 w-full text-left px-12 flex flex-row items-start justify-between mt-12 overflow-hidden'>
+          <header className='mb-4 w-full text-left pl-12 pr-8 flex flex-row items-start justify-between mt-12 overflow-hidden'>
             {/* <Canvas className="" stitch='x' /> */}
 
             <section className='flex grow-1 flex-col items-start justify-start'>
@@ -53,7 +53,8 @@ class Questions extends Component {
               <Question change={(e, index) => this.questionChange(e, index)} key={index} acf={question.acf} index={index} type={question.acf.question_type}></Question>
               )}
           </ul> */}
-          <ul className='mb-8 px-12'>
+
+          <ul className='mt-4 mb-4 px-12'>
 
 
             {questions[this.props.currentQuestion] !== undefined ?
@@ -72,6 +73,7 @@ class Questions extends Component {
               </Question> : ''}
           </ul>
           <QuestionNav questionNav={(navdata) => this.props.questionNav(navdata)} ></QuestionNav>
+          <SectionNav className="w-full" currentQuestion={this.props.currentQuestion} sections={this.props.sections} currentSection={this.props.currentSection}  sectionNav={(navdata) => this.props.sectionNav(navdata)} ></SectionNav>
           {/* <p className=' max-w-lg'>{JSON.stringify(this.props.origin)}</p> */}
 
 
